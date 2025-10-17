@@ -12,6 +12,12 @@ function getAssetEntries() {
     entries[`js/${filename}`] = path.resolve(file);
   });
 
+  const scssFiles = glob.sync('./src/scss/*.scss');
+  scssFiles.forEach((file) => {
+    const filename = path.basename(file, '.scss');
+    entries[`css/${filename}`] = path.resolve(file);
+  });
+
   return entries;
 }
 
