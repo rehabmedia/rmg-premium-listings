@@ -229,7 +229,6 @@ class Cards_Renderer {
 		unset( $data_args['context']['is_admin'] );
 		unset( $data_args['context']['is_preview'] );
 		unset( $data_args['context']['requires_location_data'] );
-		unset( $data_args['requires_location_data'] );
 
 		$this->args['wrapper_classes'][] = 'listing-cards-placeholder';
 		$wrapper_attributes              = $this->get_wrapper_attributes();
