@@ -5,6 +5,8 @@
  * @package rmg-premium-listings
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables from block attributes.
+
 // Extract attributes with defaults.
 $render_id              = uniqid( 'listing_cards_', true );
 $layout                 = $attributes['layout'] ?? 'three-column';

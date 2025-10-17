@@ -169,7 +169,7 @@ class Cards_Renderer {
 		 * @param array $args The rendering arguments.
 		 * @return array The filtered rendering arguments.
 		 */
-		$this->args = apply_filters( 'rmg_listing_cards_render_args', $merged_args );
+		$this->args = apply_filters( 'rmg_premium_listings_render_args', $merged_args );
 	}
 
 	/**
@@ -214,13 +214,13 @@ class Cards_Renderer {
 		// Prepare data attributes for client-side fetching.
 		$data_args = $this->args;
 
-		// Add the current display context to args
+		// Add the current display context to args.
 		$data_args['display_context'] = Cards_Registry::get_context_key();
 
-		// Add a flag to indicate this is initial location-based loading
+		// Add a flag to indicate this is initial location-based loading.
 		$data_args['is_location_load'] = true;
 
-		// Get already displayed IDs if exclude_displayed is true
+		// Get already displayed IDs if exclude_displayed is true.
 		if ( ! empty( $data_args['exclude_displayed'] ) ) {
 			$data_args['already_displayed'] = Cards_Registry::get_displayed();
 		}
@@ -421,7 +421,7 @@ class Cards_Renderer {
 		$data_handler = new ES_Query();
 		$result       = $data_handler->init( $this->args );
 
-		// Handle REST response format
+		// Handle REST response format.
 		if ( is_array( $result ) && isset( $result['cards'] ) ) {
 			return $result['cards'];
 		}
@@ -490,13 +490,13 @@ class Cards_Renderer {
 			<div role="tablist" aria-labelledby="<?php echo esc_attr( $this->args['render_id'] ); ?>-headline" class="tab-buttons btn-group">
 				<?php foreach ( $all_selected_terms as $index => $term ) : ?>
 					<button
-						class="btn-primary-large tab-button <?php echo $index !== 0 ? 'inactive' : 'active'; ?>"
+						class="btn-primary-large tab-button <?php echo 0 !== $index ? 'inactive' : 'active'; ?>"
 						role="tab"
 						id="<?php echo esc_attr( sanitize_title( $term ) ); ?>-tab"
 						aria-controls="<?php echo esc_attr( sanitize_title( $term ) ); ?>-panel"
 						data-tab="<?php echo esc_attr( sanitize_title( $term ) ); ?>"
-						aria-selected="<?php echo $index === 0 ? 'true' : 'false'; ?>"
-						tabindex="<?php echo $index === 0 ? '-1' : '0'; ?>"
+						aria-selected="<?php echo 0 === $index ? 'true' : 'false'; ?>"
+						tabindex="<?php echo 0 === $index ? '-1' : '0'; ?>"
 					>
 						<?php echo esc_html( $term ); ?>
 					</button>
@@ -552,17 +552,17 @@ class Cards_Renderer {
 		 * @param array $slider_config The slider configuration.
 		 * @return array The filtered slider configuration.
 		 */
-		$slider_config = apply_filters( 'rmg_listing_cards_slider_config', array() );
+		$slider_config = apply_filters( 'rmg_premium_listings_slider_config', array() );
 		?>
 		<div class="cards-grid layout-slider">
 			<<?php echo esc_attr( $wrapper_tag ); ?>
 				aria-labelledby="<?php echo esc_attr( $this->args['render_id'] ); ?>-headline"
 				id="<?php echo esc_attr( $this->args['render_id'] ); ?>-listings"
-				<?php if ( $this->args['action_type'] !== 'tabs' ) : ?>
+				<?php if ( 'tabs' !== $this->args['action_type'] ) : ?>
 					class="slider-container"
 				<?php endif; ?>
 				<?php if ( ! empty( $slider_config ) ) : ?>
-					data-slider-config="<?php echo json_encode( $slider_config ); ?>"
+					data-slider-config="<?php echo esc_attr( wp_json_encode( $slider_config ) ); ?>"
 				<?php endif; ?>
 			>
 				<?php $this->render_cards(); ?>
@@ -680,7 +680,7 @@ class Cards_Renderer {
 		 * @param array $card The card data.
 		 * @return array The filtered card data.
 		 */
-		$card = apply_filters( 'rmg_listing_cards_card_data', $card );
+		$card = apply_filters( 'rmg_premium_listings_card_data', $card );
 
 		// Build CSS classes.
 		$classes = array( 'listing-card' );
@@ -720,7 +720,7 @@ class Cards_Renderer {
 			return;
 		}
 
-		echo $this->get_slider_controls_markup();
+		echo $this->get_slider_controls_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -768,10 +768,10 @@ class Cards_Renderer {
 		}
 
 		// Handle special cases: 11th, 12th, 13th.
-		if ( in_array( $number % 100, array( 11, 12, 13 ) ) ) {
+		if ( in_array( $number % 100, array( 11, 12, 13 ), true ) ) {
 			$suffix = 'th';
 		} else {
-			// Handle standard suffixes
+			// Handle standard suffixes.
 			switch ( $number % 10 ) {
 				case 1:
 					$suffix = 'st';
@@ -787,6 +787,7 @@ class Cards_Renderer {
 			}
 		}
 
+		/* translators: 1: ranking number, 2: ordinal suffix (st, nd, rd, th) */
 		return sprintf( __( 'Ranked %1$d%2$s Place', 'rmg-premium-listings' ), $number, $suffix );
 	}
 
@@ -865,7 +866,7 @@ class Cards_Renderer {
 					'/^(.+?\d+\s+\S+)\s+(Road|Rd|Street|St|Avenue|Ave|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Circle|Cir|Place|Pl|Way|Parkway|Pkwy|Highway|Hwy|Trail|Trl|Square|Sq|Terrace|Ter|Pike|Loop|Path)\s+(.+)$/i',
 					// Numbered streets (e.g., "123 5th Avenue").
 					'/^(.+?\d+\s+\d+(?:st|nd|rd|th)\s+\S+)\s+(.+)$/i',
-					// Streets with apartment/suite numbers
+					// Streets with apartment/suite numbers.
 					'/^(.+?(?:Apt|Suite|Ste|Unit|#)\s*\S+)\s+(.+)$/i',
 					// Generic: number followed by 1-3 words as street, rest as city.
 					'/^(\d+\s+(?:\S+\s+){0,2}\S+)\s+(.+)$/i',

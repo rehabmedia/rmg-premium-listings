@@ -837,8 +837,9 @@ class ES_Query {
 		 *
 		 *  @return int $interval.
 		 */
-		$interval = apply_filters( 'rmg_listing_randomization_interval', (int) floor( time() / self::CACHE_DURATION ) );
+		$interval = apply_filters( 'rmg_premium_listings_randomization_interval', (int) floor( time() / self::CACHE_DURATION ) );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This is a debug flag for cache bypass.
 		if ( 0 === $interval || isset( $_GET['debug-bypass-cache'] ) ) {
 			// Random every time.
 			return wp_rand();
@@ -901,7 +902,7 @@ class ES_Query {
 
 			$payload = '_msearch' === $type ? $query : wp_json_encode( $query );
 
-			// Debug log the full query
+			// Debug log the full query.
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
 				// phpcs:ignore
 				error_log( 'RMG ES Query - Full query payload: ' . $payload );

@@ -5,6 +5,8 @@
  * @package rmg-premium-listings
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables from $card array.
+
 if ( ! class_exists( 'RMG_Premium_Listings\Cards_Renderer' ) ) {
 	return;
 }

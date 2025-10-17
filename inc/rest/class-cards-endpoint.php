@@ -7,6 +7,11 @@
 
 namespace RMG_Premium_Listings;
 
+/**
+ * REST API endpoint for Listing Cards.
+ *
+ * Handles REST requests for fetching and rendering listing cards.
+ */
 class Cards_Endpoint {
 
 	/**
@@ -299,32 +304,32 @@ class Cards_Endpoint {
 			'wrapper_classes'   => array_map( 'sanitize_html_class', (array) ( $params['wrapper_classes'] ?? array() ) ),
 		);
 
-		// Handle card options
+		// Handle card options.
 		$args['card_options'] = $this->prepare_card_options( $params['card_options'] ?? array() );
 
-		// Handle context
+		// Handle context.
 		$args['context'] = $this->prepare_context( $params['context'] ?? array() );
 
-		// Handle headline
+		// Handle headline.
 		$args['headline'] = $this->prepare_headline( $params['headline'] ?? array() );
 
-		// Handle selected terms
+		// Handle selected terms.
 		$args['selected_terms'] = $this->prepare_selected_terms( $params['selected_terms'] ?? array() );
 
-		// Handle wrapper attributes
+		// Handle wrapper attributes.
 		$args['wrapper_attributes'] = $this->prepare_wrapper_attributes( $params['wrapper_attributes'] ?? array() );
 
-		// Handle location
+		// Handle location.
 		if ( ! empty( $params['user_location'] ) ) {
 			$args['user_location'] = $this->prepare_location( $params['user_location'] );
 		}
 
-		// Handle display context
+		// Handle display context.
 		if ( ! empty( $params['display_context'] ) ) {
 			$args['display_context'] = sanitize_key( $params['display_context'] );
 		}
 
-		// Handle already displayed
+		// Handle already displayed.
 		if ( ! empty( $params['already_displayed'] ) ) {
 			$args['already_displayed'] = array_map( 'absint', (array) $params['already_displayed'] );
 		}
@@ -371,7 +376,7 @@ class Cards_Endpoint {
 		return array(
 			'show'      => (bool) ( $headline['show'] ?? false ),
 			'text'      => sanitize_text_field( $headline['text'] ?? __( 'Featured Facilities Near You', 'rmg-premium-listings' ) ),
-			'alignment' => in_array( $headline['alignment'] ?? '', array( 'left', 'center', 'right' ) )
+			'alignment' => in_array( $headline['alignment'] ?? '', array( 'left', 'center', 'right' ), true )
 				? $headline['alignment']
 				: 'left',
 			'tag'       => min( 6, max( 1, absint( $headline['tag'] ?? 2 ) ) ),
@@ -592,5 +597,5 @@ class Cards_Endpoint {
 }
 
 // Initialize the endpoint.
-$rmg_listing_cards_endpoint = new Cards_Endpoint();
-$rmg_listing_cards_endpoint->init();
+$rmg_premium_listings_cards_endpoint = new Cards_Endpoint();
+$rmg_premium_listings_cards_endpoint->init();

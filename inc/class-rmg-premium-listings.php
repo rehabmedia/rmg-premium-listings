@@ -51,6 +51,17 @@ class RMG_Premium_Listings {
 		// Hook into WordPress.
 		add_action( 'init', array( $this, 'register_blocks' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+
+		// Initialize asset manager.
+		new \RMG_Premium_Listings\Asset_Manager();
+
+		// Initialize embed system.
+		\RMG_Premium_Listings\Embed::init();
+
+		// Initialize admin if in admin context.
+		if ( is_admin() ) {
+			\RMG_Premium_Listings\Admin::init();
+		}
 	}
 
 	/**
@@ -58,15 +69,27 @@ class RMG_Premium_Listings {
 	 */
 	private function includes(): void {
 		// ES and REST functionality.
-		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/es/class-rmg-premium-listings-es-query.php';
-		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/es/class-rmg-premium-listings-cards-registry.php';
-		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/rest/class-rmg-premium-listings-cards-endpoint.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/es/class-es-query.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/es/class-es-utils.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/es/class-cards-registry.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/rest/class-cards-endpoint.php';
 
 		// Helper functions.
-		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-rmg-premium-listings-helpers.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-helpers.php';
 
 		// Renderer.
-		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-rmg-premium-listings-cards-renderer.php';
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-cards-renderer.php';
+
+		// Asset manager.
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-asset-manager.php';
+
+		// Embed functionality.
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-embed.php';
+
+		// Admin functionality.
+		if ( is_admin() ) {
+			require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/admin/class-admin.php';
+		}
 	}
 
 	/**
@@ -93,7 +116,11 @@ class RMG_Premium_Listings {
 		// Set plugin version.
 		update_option( 'rmg_premium_listings_version', RMG_PREMIUM_LISTINGS_VERSION );
 
-		// Flush rewrite rules to ensure REST API endpoints work.
+		// Initialize embed system to register rewrite rules.
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-embed.php';
+		\RMG_Premium_Listings\Embed::init();
+
+		// Flush rewrite rules to ensure embed endpoint and REST API work.
 		flush_rewrite_rules();
 	}
 
