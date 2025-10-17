@@ -1,0 +1,213 @@
+/**
+ * RMG Premium Listings Admin Styles
+ *
+ * @package RMG_Premium_Listings
+ */
+
+.rmg-premium-listings-admin {
+	max-width: 1400px;
+}
+
+.rmg-admin-container {
+	display: flex;
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+.rmg-admin-main {
+	flex: 1;
+	min-width: 0;
+}
+
+.rmg-admin-sidebar {
+	width: 300px;
+	flex-shrink: 0;
+}
+
+.rmg-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.rmg-card h2 {
+	margin-top: 0;
+	margin-bottom: 1rem;
+	font-size: 1.3em;
+	border-bottom: 1px solid #e0e0e0;
+	padding-bottom: 0.5rem;
+}
+
+.rmg-card h3 {
+	margin-top: 0;
+	margin-bottom: 1rem;
+	font-size: 1.1em;
+}
+
+.rmg-form-row {
+	margin-bottom: 1.5rem;
+}
+
+.rmg-form-row:last-child {
+	margin-bottom: 0;
+}
+
+.rmg-form-row label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+}
+
+.rmg-form-row .description {
+	margin-top: 0.5rem;
+	color: #646970;
+	font-size: 13px;
+}
+
+.rmg-form-group {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.rmg-form-group select {
+	flex: 1;
+}
+
+.rmg-button-group {
+	display: flex;
+	gap: 0.5rem;
+
+	&.actions {
+		flex-direction: column;
+	}
+}
+
+#config-json {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	tab-size: 2;
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 1rem;
+}
+
+.rmg-validation-message {
+	margin-top: 1rem;
+	padding: 0.75rem 1rem;
+	border-left: 4px solid;
+	border-radius: 4px;
+	display: none;
+}
+
+.rmg-validation-message.success {
+	background: #ecf7ed;
+	border-color: #46b450;
+	color: #205723;
+}
+
+.rmg-validation-message.error {
+	background: #fcf0f1;
+	border-color: #d63638;
+	color: #5a1a1c;
+}
+
+.rmg-code-output {
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 1rem;
+	margin: 1rem 0;
+	max-height: 400px;
+	overflow: auto;
+}
+
+.rmg-code-output pre {
+	margin: 0;
+}
+
+.rmg-code-output code {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+	font-size: 12px;
+	line-height: 1.6;
+	white-space: pre;
+	word-wrap: normal;
+}
+
+.rmg-copy-success {
+	color: #46b450;
+	font-weight: 600;
+	margin-left: 1rem;
+	animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.rmg-preview-container {
+	background: #f0f0f1;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 1rem;
+	min-height: 400px;
+}
+
+.rmg-preview-container iframe {
+	background: #fff;
+	border-radius: 4px;
+}
+
+.rmg-help-list {
+	margin: 0;
+}
+
+.rmg-help-list dt {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+	font-size: 13px;
+	margin-top: 1rem;
+	margin-bottom: 0.25rem;
+	color: #135e96;
+}
+
+.rmg-help-list dt:first-child {
+	margin-top: 0;
+}
+
+.rmg-help-list dd {
+	margin: 0 0 0 1rem;
+	color: #646970;
+	font-size: 13px;
+}
+
+.rmg-help-list code {
+	background: #f0f0f1;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+	.rmg-admin-container {
+		flex-direction: column;
+	}
+
+	.rmg-admin-sidebar {
+		width: 100%;
+	}
+}
+
+/* WordPress admin notices spacing */
+.rmg-premium-listings-admin .notice {
+	margin: 1.5rem 0;
+}
