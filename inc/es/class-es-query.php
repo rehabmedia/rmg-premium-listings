@@ -8,13 +8,15 @@
  * @package rmg-premium-listings
  */
 
+namespace RMG_Premium_Listings;
+
 use RehabMediaGroup\Elasticsearch\Elasticsearch;
 use RehabMediaGroup\Elasticsearch\Utilities;
 
 /**
- * RMG Listing ES Query
+ * ES Query
  */
-class RMG_Premium_Listings_ES_Query {
+class ES_Query {
 
 	/**
 	 * Page type constants
@@ -98,7 +100,7 @@ class RMG_Premium_Listings_ES_Query {
 	/**
 	 * Render class
 	 *
-	 * @var RMG_Premium_Listings_Cards_Renderer
+	 * @var Cards_Renderer
 	 */
 	private $render_class = null;
 
@@ -217,7 +219,7 @@ class RMG_Premium_Listings_ES_Query {
 			$this->card_options        = $args['card_options'] ?? array();
 			$this->exclude_displayed   = $args['exclude_displayed'] ?? false;
 			$this->post_id             = $args['context']['post_id'] ?? 0;
-			$this->render_class        = new RMG_Premium_Listings_Cards_Renderer();
+			$this->render_class        = new Cards_Renderer();
 			$this->selected_terms      = $args['selected_terms'] ?? array();
 			$this->selected_terms_flat = array_merge( ...array_values( $this->selected_terms ) );
 
@@ -232,7 +234,7 @@ class RMG_Premium_Listings_ES_Query {
 
 			// Add previously displayed IDs if exclude_displayed is true.
 			if ( $this->exclude_displayed ) {
-				$previously_displayed    = RMG_Premium_Listings_Cards_Registry::get_displayed( $display_context );
+				$previously_displayed    = Cards_Registry::get_displayed( $display_context );
 				$this->excluded_post_ids = array_unique(
 					array_merge(
 						$this->excluded_post_ids,
@@ -279,7 +281,7 @@ class RMG_Premium_Listings_ES_Query {
 
 				// Register all displayed IDs.
 				if ( ! empty( $displayed_ids ) ) {
-					RMG_Premium_Listings_Cards_Registry::register_displayed(
+					Cards_Registry::register_displayed(
 						$displayed_ids,
 						$display_context
 					);

@@ -5,7 +5,9 @@
  * @package rmg-premium-listings
  */
 
-class RMG_Premium_Listings_Cards_Endpoint {
+namespace RMG_Premium_Listings;
+
+class Cards_Endpoint {
 
 	/**
 	 * Initialize the endpoint.
@@ -40,8 +42,8 @@ class RMG_Premium_Listings_Cards_Endpoint {
 		$debug_notes = array();
 		$warnings    = array();
 
-		if ( ! class_exists( 'RMG_Premium_Listings_Cards_Renderer' ) ) {
-			return new WP_Error(
+		if ( ! class_exists( 'RMG_Premium_Listings\Cards_Renderer' ) ) {
+			return new \WP_Error(
 				'class_not_found',
 				__( 'Listing Cards class not available.', 'rmg-premium-listings' ),
 				array( 'status' => 500 )
@@ -61,7 +63,7 @@ class RMG_Premium_Listings_Cards_Endpoint {
 
 		try {
 			// Get cards data.
-			$data_handler = new RMG_Premium_Listings_ES_Query();
+			$data_handler = new ES_Query();
 			$cards_data   = $data_handler->init( $args );
 
 			// Count cards returned from query.
@@ -99,7 +101,7 @@ class RMG_Premium_Listings_Cards_Endpoint {
 			}
 
 			// Render HTML first to get actual card count.
-			$renderer = new RMG_Premium_Listings_Cards_Renderer();
+			$renderer = new Cards_Renderer();
 			$html     = $renderer->get_render( $args );
 
 			// Count actual cards in the rendered HTML.
@@ -202,7 +204,7 @@ class RMG_Premium_Listings_Cards_Endpoint {
 				error_log( 'RMG Listing Cards - Debug Notes: ' . wp_json_encode( $debug_notes ) );
 			}
 
-			return new WP_REST_Response(
+			return new \WP_REST_Response(
 				array(
 					'success'       => true,
 					'html'          => $html,
@@ -232,7 +234,7 @@ class RMG_Premium_Listings_Cards_Endpoint {
 				error_log( 'Stack trace: ' . $e->getTraceAsString() );
 			}
 
-			return new WP_Error(
+			return new \WP_Error(
 				'render_error',
 				$e->getMessage(),
 				array(
@@ -590,5 +592,5 @@ class RMG_Premium_Listings_Cards_Endpoint {
 }
 
 // Initialize the endpoint.
-$rmg_listing_cards_endpoint = new RMG_Premium_Listings_Cards_Endpoint();
+$rmg_listing_cards_endpoint = new Cards_Endpoint();
 $rmg_listing_cards_endpoint->init();

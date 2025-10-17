@@ -5,12 +5,14 @@
  * @package rmg-premium-listings
  */
 
+namespace RMG_Premium_Listings;
+
 use RehabMediaGroup\Elasticsearch\Utilities;
 
 /**
  * Class for rendering listing cards block.
  */
-class RMG_Premium_Listings_Cards_Renderer {
+class Cards_Renderer {
 
 	/**
 	 * Block name.
@@ -213,14 +215,14 @@ class RMG_Premium_Listings_Cards_Renderer {
 		$data_args = $this->args;
 
 		// Add the current display context to args
-		$data_args['display_context'] = RMG_Premium_Listings_Cards_Registry::get_context_key();
+		$data_args['display_context'] = Cards_Registry::get_context_key();
 
 		// Add a flag to indicate this is initial location-based loading
 		$data_args['is_location_load'] = true;
 
 		// Get already displayed IDs if exclude_displayed is true
 		if ( ! empty( $data_args['exclude_displayed'] ) ) {
-			$data_args['already_displayed'] = RMG_Premium_Listings_Cards_Registry::get_displayed();
+			$data_args['already_displayed'] = Cards_Registry::get_displayed();
 		}
 
 		// Remove unnecessary data from data attributes.
@@ -385,7 +387,7 @@ class RMG_Premium_Listings_Cards_Renderer {
 	 */
 	private function ensure_assets_loaded(): void {
 		// Get the registered block type.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( self::BLOCK_NAME );
+		$block_type = \WP_Block_Type_Registry::get_instance()->get_registered( self::BLOCK_NAME );
 
 		if ( ! $block_type ) {
 			return;
@@ -416,7 +418,7 @@ class RMG_Premium_Listings_Cards_Renderer {
 	 * @return array Array of card data.
 	 */
 	private function get_cards_data(): array {
-		$data_handler = new RMG_Premium_Listings_ES_Query();
+		$data_handler = new ES_Query();
 		$result       = $data_handler->init( $this->args );
 
 		// Handle REST response format
@@ -820,7 +822,7 @@ class RMG_Premium_Listings_Cards_Renderer {
 
 		$term = Utilities::rmg_get_primary_term( $post_id, 'rehab-centers' );
 
-		if ( $term instanceof WP_Term && ! empty( $address ) ) {
+		if ( $term instanceof \WP_Term && ! empty( $address ) ) {
 			$street = get_field( 'street_address_1', $post_id );
 			$city   = $term?->name;
 			$state  = get_field( 'state_abbr', 'rehab-centers_' . $term->parent );

@@ -8,10 +8,12 @@
  * @package rmg-premium-listings
  */
 
+namespace RMG_Premium_Listings;
+
 /**
- * RMG ES Utils
+ * ES Utils
  */
-class RMG_Premium_Listings_ES_Utils {
+class ES_Utils {
 
 	/**
 	 * Calculate premium plus pacing score

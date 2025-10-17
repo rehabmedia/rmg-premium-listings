@@ -5,6 +5,8 @@
  * @package rmg-premium-listings
  */
 
+namespace RMG_Premium_Listings;
+
 /**
  * Registry class for tracking displayed listing cards.
  *
@@ -14,7 +16,7 @@
  *
  * @since 1.0.0
  */
-class RMG_Premium_Listings_Cards_Registry {
+class Cards_Registry {
 
 	/**
 	 * Static storage for current page load only.

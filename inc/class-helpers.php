@@ -5,6 +5,8 @@
  * @package rmg-premium-listings
  */
 
+namespace RMG_Premium_Listings;
+
 /**
  * Helper functions class for RMG Premium Listings.
  *
@@ -12,7 +14,7 @@
  *
  * @since 1.0.0
  */
-class RMG_Premium_Listings_Helpers {
+class Helpers {
 
 	/**
 	 * Echo the map layer.

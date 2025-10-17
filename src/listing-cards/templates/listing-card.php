@@ -5,11 +5,11 @@
  * @package rmg-premium-listings
  */
 
-if ( ! class_exists( 'RMG_Premium_Listings_Cards_Renderer' ) ) {
+if ( ! class_exists( 'RMG_Premium_Listings\Cards_Renderer' ) ) {
 	return;
 }
 
-$listing_cards   = new RMG_Premium_Listings_Cards_Renderer();
+$listing_cards   = new \RMG_Premium_Listings\Cards_Renderer();
 $address         = $listing_cards->parse_single_address_field( $card['address'], $card['id'] );
 $card_options    = $card['card_options'];
 $show_rank       = $card_options['showRank'];
@@ -64,7 +64,7 @@ $card_wrapper_tag = $is_premium ? 'aside' : 'article';
 					<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>" loading="lazy">
 				<?php elseif ( ! empty( $latitude ) && ! empty( $longitude ) ) : ?>
 					<?php
-						RMG_Premium_Listings_Helpers::the_map_layer(
+						\RMG_Premium_Listings\Helpers::the_map_layer(
 							$card['address'],
 							$latitude ?? '',
 							$longitude ?? '',

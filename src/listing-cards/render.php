@@ -84,5 +84,5 @@ $render_args = array(
 );
 
 // Render the block using the reusable function.
-$listing_cards = new RMG_Premium_Listings_Cards_Renderer();
+$listing_cards = new \RMG_Premium_Listings\Cards_Renderer();
 $listing_cards->render( $render_args );
