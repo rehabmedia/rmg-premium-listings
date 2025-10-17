@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="WordPress Coding Standards">
-	<description>WordPress Coding Standards for RMGCS</description>
+	<description>WordPress Coding Standards for RMG Premium Listings</description>
 
 	<!-- What to scan -->
 	<file>.</file>
@@ -22,7 +22,9 @@
 
 	<!-- Rules: Check PHP version compatibility -->
 	<config name="testVersion" value="7.4-"/>
-	<rule ref="PHPCompatibilityWP"/>
+	<rule ref="PHPCompatibilityWP">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
 
 	<!-- Rules: WordPress Core -->
 	<rule ref="WordPress-Core">
@@ -52,14 +54,14 @@
 
 	<!-- Check code for cross-version PHP compatibility. -->
 	<rule ref="WordPress.WP.I18n"/>
-	<config name="text_domain" value="rmgcs"/>
+	<config name="text_domain" value="rmg-premium-listings"/>
 
 	<!-- Verify that everything in the global namespace is prefixed -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="rmgcs"/>
-				<element value="RMGCS"/>
+				<element value="rmg-premium-listings"/>
+				<element value="RMG_Premium_Listings"/>
 			</property>
 		</properties>
 	</rule>
@@ -74,26 +76,26 @@
 	<!-- Set the minimum supported WP version. This is used by several sniffs. -->
 	<rule ref="WordPress.WP.DeprecatedFunctions">
 		<properties>
-			<property name="minimum_supported_version" value="6.0"/>
+			<property name="minimum_wp_version" value="6.0"/>
 		</properties>
 	</rule>
 
 	<!-- Verify that no WP functions are used which are deprecated or have been removed. -->
 	<rule ref="WordPress.WP.DeprecatedClasses">
 		<properties>
-			<property name="minimum_supported_version" value="6.0"/>
+			<property name="minimum_wp_version" value="6.0"/>
 		</properties>
 	</rule>
 
 	<rule ref="WordPress.WP.DeprecatedParameters">
 		<properties>
-			<property name="minimum_supported_version" value="6.0"/>
+			<property name="minimum_wp_version" value="6.0"/>
 		</properties>
 	</rule>
 
 	<rule ref="WordPress.WP.DeprecatedParameterValues">
 		<properties>
-			<property name="minimum_supported_version" value="6.0"/>
+			<property name="minimum_wp_version" value="6.0"/>
 		</properties>
 	</rule>
 </ruleset>

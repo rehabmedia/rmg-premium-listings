@@ -36,8 +36,8 @@ $card_options     = array(
 	'showAddress'   => ! empty( $card_options_raw['showAddress'] ?? true ),
 	'showInsurance' => ! empty( $card_options_raw['showInsurance'] ?? true ),
 );
-$card_count             = 'slider' === $layout ? 8 : 3;
-$context                = array(
+$card_count       = 'slider' === $layout ? 8 : 3;
+$context          = array(
 	'post_id'                => get_the_ID(),
 	'post_type'              => get_post_type(),
 	'is_admin'               => is_admin(),
