@@ -1,0 +1,92 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "rmg-premium-listings/cards",
+	"version": "0.2.1",
+	"title": "RMG Premium Listing Cards",
+	"category": "widgets",
+	"description": "Display listing cards in various layouts with filtering options.",
+	"keywords": [
+		"listing",
+		"cards",
+		"facilities",
+		"treatment"
+	],
+	"example": {},
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"align": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"attributes": {
+		"actionType": {
+			"type": "string",
+			"default": "none",
+			"enum": ["none", "filter", "tabs"]
+		},
+		"cardOptions": {
+			"type": "object",
+			"default": {
+				"showAddress": true,
+				"hasBackground": true,
+				"showInsurance": true,
+				"showRank": true
+			}
+		},
+		"excludeDisplayed": {
+			"type": "boolean",
+			"default": false
+		},
+		"hasBackground": {
+			"type": "boolean",
+			"default": false
+		},
+		"headline": {
+			"type": "object",
+			"default": {
+				"text": "Featured Facilities Near You",
+				"alignment": "left",
+				"show": true,
+				"tag": 2
+			}
+		},
+		"isInline": {
+			"type": "boolean",
+			"default": false
+		},
+		"layout": {
+			"type": "string",
+			"default": "three-column",
+			"enum": ["three-column", "slider", "vertical"]
+		},
+		"requiresLocationData": {
+			"type": "boolean",
+			"default": true
+		},
+		"selectedTerms": {
+			"type": "object",
+			"default": {
+				"amenities": [],
+				"clinicalServices": [],
+				"levelsOfCare": [],
+				"paymentOptions": [],
+				"programs": [],
+				"treatmentOptions": []
+			}
+		},
+		"slidesToShow": {
+			"type": "number",
+			"default": 3
+		}
+	},
+	"textdomain": "rmg-premium-listings",
+	"editorStyle": "file:./index.css",
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

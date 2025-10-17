@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards">
+	<description>WordPress Coding Standards for RMGCS</description>
+
+	<!-- What to scan -->
+	<file>.</file>
+
+	<!-- Exclude patterns -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*.min.js</exclude-pattern>
+	<exclude-pattern>*.min.css</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+
+	<!-- How to scan -->
+	<arg value="sp"/> <!-- Show sniff and progress -->
+	<arg name="basepath" value="."/> <!-- Strip the file paths down to the relevant bit -->
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/> <!-- Enables parallel processing when available for faster results -->
+
+	<!-- Rules: Check PHP version compatibility -->
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- Rules: WordPress Core -->
+	<rule ref="WordPress-Core">
+		<!-- Allow array short syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+
+		<!-- We may want specific file names -->
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<!-- Rules: WordPress Docs -->
+	<rule ref="WordPress-Docs">
+		<!-- Sometimes we don't need package tags -->
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+	</rule>
+
+	<!-- Rules: WordPress Extra -->
+	<rule ref="WordPress-Extra">
+		<!-- Ignore short array syntax -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+
+	<!-- For help in understanding these custom sniff properties:
+		https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties
+	-->
+	<config name="minimum_supported_wp_version" value="6.0"/>
+
+	<!-- Check code for cross-version PHP compatibility. -->
+	<rule ref="WordPress.WP.I18n"/>
+	<config name="text_domain" value="rmgcs"/>
+
+	<!-- Verify that everything in the global namespace is prefixed -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="rmgcs"/>
+				<element value="RMGCS"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Allow for theme specific exceptions to the file name rules based on the theme hierarchy. -->
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="is_theme" value="true"/>
+		</properties>
+	</rule>
+
+	<!-- Set the minimum supported WP version. This is used by several sniffs. -->
+	<rule ref="WordPress.WP.DeprecatedFunctions">
+		<properties>
+			<property name="minimum_supported_version" value="6.0"/>
+		</properties>
+	</rule>
+
+	<!-- Verify that no WP functions are used which are deprecated or have been removed. -->
+	<rule ref="WordPress.WP.DeprecatedClasses">
+		<properties>
+			<property name="minimum_supported_version" value="6.0"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.DeprecatedParameters">
+		<properties>
+			<property name="minimum_supported_version" value="6.0"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.DeprecatedParameterValues">
+		<properties>
+			<property name="minimum_supported_version" value="6.0"/>
+		</properties>
+	</rule>
+</ruleset>
