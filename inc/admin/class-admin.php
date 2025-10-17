@@ -36,7 +36,7 @@ class Admin {
 	 * Add admin menu page.
 	 */
 	public static function add_admin_menu(): void {
-		add_management_page(
+		add_options_page(
 			__( 'RMG Premium Listings', 'rmg-premium-listings' ),
 			__( 'Premium Listings', 'rmg-premium-listings' ),
 			'manage_options',
