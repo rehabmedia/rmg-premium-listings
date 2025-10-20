@@ -21,8 +21,10 @@
 	--rmg-grey-700: #26262c;
 	--rmg-green: #3f8010;
 
-	// Semantic color variables (can be overridden for theming)
-	--rmg-color-core-primary: var(--rmg-dark-blue);
+	// Semantic color variables (these can be overridden by embed parameters)
+	// Custom embed variables (--rmg-text-color, --rmg-bg-color, --rmg-border-color, --rmg-font-family)
+	// are injected via the embed template when provided as URL parameters
+	--rmg-color-core-primary: var(--rmg-text-color, var(--rmg-dark-blue));
 	--rmg-color-core-accent: var(--rmg-bright-blue);
 	--rmg-color-core-subtle: var(--rmg-light-blue);
 
@@ -90,13 +92,14 @@
 // Base component styles
 .wp-block-rmg-premium-listings-cards {
 	color: var(--rmg-color-core-primary);
-	font-family: 'Lato', sans-serif;
+	font-family: var(--rmg-font-family, 'Lato', sans-serif);
+	margin: var(--rmg-margin, 0 0 2rem 0);
 	width: 100%;
 
 	&.has-background {
-		background-color: var(--rmg-very-light-blue);
+		background: var(--rmg-bg-color, var(--rmg-very-light-blue));
 		border-radius: 16px;
-		padding: 1.5rem;
+		padding: var(--rmg-padding, 1.5rem);
 	}
 
 	// Initial slider styles.
@@ -111,7 +114,7 @@
 
 	// Headline styles
 	.listing-headline {
-		color: var(--rmg-grey-700);
+		color: var(--rmg-heading-color, var(--rmg-color-core-primary));
 		line-height: 1;
 		margin-bottom: 1.25rem;
 		text-align: left;
@@ -144,7 +147,7 @@
 	// Card styles
 	.listing-card {
 		border-radius: 16px;
-		border: 2px solid var(--rmg-color-core-primary);
+		border: 2px solid var(--rmg-border-color, var(--rmg-color-core-primary));
 		overflow: hidden;
 		padding: 1rem;
 		scroll-snap-align: start;
@@ -152,14 +155,14 @@
 
 		// Hover states
 		&:has(.card-title a:hover, .card-title a:focus-visible, .card-image a:hover, .card-image a:focus-visible) {
-			border-color: var(--rmg-background-blue);
+			border-color: var(--rmg-border-hover-color, var(--rmg-background-blue));
 
 			.card-title a {
-				color: var(--rmg-bright-blue);
+				color: var(--rmg-text-hover-color, var(--rmg-bright-blue));
 			}
 
 			&.has-background {
-				border-color: var(--rmg-color-core-primary);
+				border-color: var(--rmg-border-color, var(--rmg-color-core-primary));
 			}
 
 			.card-image > a > div[id^="map_"],
@@ -170,7 +173,7 @@
 
 		&.has-background {
 			background: var(--rmg-white);
-			border: 2px solid var(--rmg-background-blue);
+			border: 2px solid var(--rmg-border-hover-color, var(--rmg-background-blue));
 		}
 
 		// Card image
@@ -263,7 +266,7 @@
 				@include flex-center;
 
 				border-radius: 4px;
-				color: var(--rmg-dark-blue);
+				color: var(--rmg-color-core-primary);
 				gap: 8px;
 				min-height: 26px;
 				overflow: hidden;

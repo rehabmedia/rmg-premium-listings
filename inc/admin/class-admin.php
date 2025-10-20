@@ -75,6 +75,29 @@ class Admin {
 	}
 
 	/**
+	 * Sanitize multiple space-separated CSS class names.
+	 *
+	 * @param string $classes Space-separated class names.
+	 * @return string Sanitized space-separated class names.
+	 */
+	private static function sanitize_html_classes( string $classes ): string {
+		$classes = trim( $classes );
+		if ( empty( $classes ) ) {
+			return '';
+		}
+
+		// Split on whitespace, sanitize each class, filter out empties, rejoin with space.
+		$class_array = array_filter(
+			array_map(
+				'sanitize_html_class',
+				preg_split( '/\s+/', $classes )
+			)
+		);
+
+		return implode( ' ', $class_array );
+	}
+
+	/**
 	 * Handle saving a configuration.
 	 */
 	private static function handle_save_config(): void {
@@ -128,7 +151,7 @@ class Admin {
 		// Get existing configs.
 		$configs = get_option( self::OPTION_NAME, array() );
 
-		// Save config with override parameters.
+		// Save config with override parameters (styling now in config.displayOptions).
 		$configs[ $config_name ] = array(
 			'config'    => $config,
 			'overrides' => array(
@@ -226,11 +249,16 @@ class Admin {
 		$last_saved = get_transient( 'rmg_last_saved_config_' . get_current_user_id() );
 		if ( false === $last_saved ) {
 			$last_saved = array(
-				'name'     => '',
-				'json'     => '',
-				'referrer' => '',
-				'state'    => '',
-				'city'     => '',
+				'name'             => '',
+				'json'             => '',
+				'referrer'         => '',
+				'state'            => '',
+				'city'             => '',
+				'classname'        => '',
+				'background_color' => '',
+				'border_color'     => '',
+				'text_color'       => '',
+				'font_family'      => '',
 			);
 		}
 

@@ -41,6 +41,18 @@ $default_json = wp_json_encode(
 			'showAddress'   => true,
 			'showInsurance' => true,
 		),
+		'displayOptions' => array(
+			'bgColor'          => '',
+			'borderColor'      => '',
+			'textColor'        => '',
+			'headingColor'     => '',
+			'textHoverColor'   => '',
+			'borderHoverColor' => '',
+			'fontFamily'       => '',
+			'padding'          => '',
+			'margin'           => '',
+			'classname'        => '',
+		),
 	),
 	JSON_PRETTY_PRINT
 );
@@ -74,12 +86,22 @@ $default_json = wp_json_encode(
 										'state'    => '',
 										'city'     => '',
 									);
+									$styling   = isset( $config_data['styling'] ) ? $config_data['styling'] : array(
+										'classname'   => '',
+										'font_family' => '',
+										'padding'     => '',
+										'margin'      => '',
+									);
 									?>
 									<option value="<?php echo esc_attr( $name ); ?>"
 										data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>"
 										data-referrer="<?php echo esc_attr( $overrides['referrer'] ); ?>"
 										data-state="<?php echo esc_attr( $overrides['state'] ); ?>"
-										data-city="<?php echo esc_attr( $overrides['city'] ); ?>">
+										data-city="<?php echo esc_attr( $overrides['city'] ); ?>"
+										data-classname="<?php echo esc_attr( $styling['classname'] ); ?>"
+										data-font-family="<?php echo esc_attr( $styling['font_family'] ); ?>"
+										data-padding="<?php echo esc_attr( $styling['padding'] ); ?>"
+										data-margin="<?php echo esc_attr( $styling['margin'] ); ?>">
 										<?php echo esc_html( $name ); ?>
 									</option>
 								<?php endforeach; ?>
@@ -117,7 +139,7 @@ $default_json = wp_json_encode(
 					<div class="rmg-form-row">
 						<textarea id="config-json"
 							name="config_json"
-							rows="27"
+							rows="39"
 							class="large-text code"
 							spellcheck="false"><?php echo esc_textarea( ! empty( $last_saved['json'] ) ? $last_saved['json'] : $default_json ); ?></textarea>
 						<p class="description">
@@ -178,6 +200,7 @@ $default_json = wp_json_encode(
 						</p>
 					</div>
 				</div>
+
 
 				<!-- Actions -->
 				<div class="rmg-card">
@@ -245,6 +268,36 @@ $default_json = wp_json_encode(
 
 					<dt><code>cardOptions.showInsurance</code></dt>
 					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Display insurance badge.', 'rmg-premium-listings' ); ?></dd>
+
+					<dt><code>displayOptions.bgColor</code></dt>
+					<dd><?php esc_html_e( 'Background color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-bg-color</code></dd>
+
+					<dt><code>displayOptions.borderColor</code></dt>
+					<dd><?php esc_html_e( 'Card border color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-color</code></dd>
+
+					<dt><code>displayOptions.textColor</code></dt>
+					<dd><?php esc_html_e( 'Primary text color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-text-color</code></dd>
+
+					<dt><code>displayOptions.headingColor</code></dt>
+					<dd><?php esc_html_e( 'Headline color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-heading-color</code></dd>
+
+					<dt><code>displayOptions.textHoverColor</code></dt>
+					<dd><?php esc_html_e( 'Link hover color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-text-hover-color</code></dd>
+
+					<dt><code>displayOptions.borderHoverColor</code></dt>
+					<dd><?php esc_html_e( 'Card border hover color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-hover-color</code></dd>
+
+					<dt><code>displayOptions.fontFamily</code></dt>
+					<dd><?php esc_html_e( 'Font family. e.g., "Arial, sans-serif" or "Poppins, sans-serif"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-font-family</code></dd>
+
+					<dt><code>displayOptions.padding</code></dt>
+					<dd><?php esc_html_e( 'Block padding. e.g., "1.5rem" or "24px"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-padding</code></dd>
+
+					<dt><code>displayOptions.margin</code></dt>
+					<dd><?php esc_html_e( 'Block margin. e.g., "0 auto" or "20px 0"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-margin</code></dd>
+
+					<dt><code>displayOptions.classname</code></dt>
+					<dd><?php esc_html_e( 'Custom CSS class(es) added to embed container. Supports space-separated values.', 'rmg-premium-listings' ); ?></dd>
 				</dl>
 			</div>
 		</div>

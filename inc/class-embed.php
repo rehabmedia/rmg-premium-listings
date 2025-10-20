@@ -80,9 +80,59 @@ class Embed {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
 		$parent_referrer = isset( $_GET['parent_referrer'] ) ? esc_url_raw( wp_unslash( $_GET['parent_referrer'] ) ) : '';
 
+		// Get styling options.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$bg_color = isset( $_GET['bg_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['bg_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$border_color = isset( $_GET['border_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['border_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$text_color = isset( $_GET['text_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['text_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$font_family = isset( $_GET['font_family'] ) ? sanitize_text_field( wp_unslash( $_GET['font_family'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$heading_color = isset( $_GET['heading_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['heading_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$text_hover_color = isset( $_GET['text_hover_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['text_hover_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$border_hover_color = isset( $_GET['border_hover_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['border_hover_color'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$padding = isset( $_GET['padding'] ) ? sanitize_text_field( wp_unslash( $_GET['padding'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$margin = isset( $_GET['margin'] ) ? sanitize_text_field( wp_unslash( $_GET['margin'] ) ) : '';
+
 		// Load the embed template.
-		self::load_embed_template( $config, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer );
+		self::load_embed_template( $config, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer, $bg_color, $border_color, $text_color, $font_family, $heading_color, $text_hover_color, $border_hover_color, $padding, $margin );
 		exit;
+	}
+
+	/**
+	 * Sanitize CSS color value.
+	 *
+	 * Supports hex colors and linear gradients only.
+	 *
+	 * @param string $color Color value to sanitize.
+	 * @return string Sanitized color value or empty string if invalid.
+	 */
+	private static function sanitize_css_color( string $color ): string {
+		$color = trim( $color );
+
+		// Return empty string for empty input.
+		if ( empty( $color ) ) {
+			return '';
+		}
+
+		// Allow hex colors (with optional alpha).
+		if ( preg_match( '/^#([a-f0-9]{3}|[a-f0-9]{4}|[a-f0-9]{6}|[a-f0-9]{8})$/i', $color ) ) {
+			return sanitize_text_field( $color );
+		}
+
+		// Allow linear gradients only.
+		if ( preg_match( '/^linear-gradient\s*\([^)]+\)$/i', $color ) ) {
+			return sanitize_text_field( $color );
+		}
+
+		// Invalid color value.
+		return '';
 	}
 
 	/**
@@ -147,15 +197,24 @@ class Embed {
 	/**
 	 * Load the embed template.
 	 *
-	 * @param array  $config          Configuration array.
-	 * @param string $referrer        Referrer site.
-	 * @param string $state           State override.
-	 * @param string $city            City override.
-	 * @param string $parent_url      Parent page URL (for impression tracking).
-	 * @param string $parent_host     Parent page host (for impression tracking).
-	 * @param string $parent_referrer Parent page referrer (for impression tracking).
+	 * @param array  $config             Configuration array.
+	 * @param string $referrer           Referrer site.
+	 * @param string $state              State override.
+	 * @param string $city               City override.
+	 * @param string $parent_url         Parent page URL (for impression tracking).
+	 * @param string $parent_host        Parent page host (for impression tracking).
+	 * @param string $parent_referrer    Parent page referrer (for impression tracking).
+	 * @param string $bg_color           Background color.
+	 * @param string $border_color       Border color.
+	 * @param string $text_color         Text color.
+	 * @param string $font_family        Font family.
+	 * @param string $heading_color      Heading color.
+	 * @param string $text_hover_color   Text hover color.
+	 * @param string $border_hover_color Border hover color.
+	 * @param string $padding            Block padding.
+	 * @param string $margin             Block margin.
 	 */
-	private static function load_embed_template( array $config, string $referrer, string $state, string $city, string $parent_url = '', string $parent_host = '', string $parent_referrer = '' ): void {
+	private static function load_embed_template( array $config, string $referrer, string $state, string $city, string $parent_url = '', string $parent_host = '', string $parent_referrer = '', string $bg_color = '', string $border_color = '', string $text_color = '', string $font_family = '', string $heading_color = '', string $text_hover_color = '', string $border_hover_color = '', string $padding = '', string $margin = '' ): void {
 		// Set up render arguments.
 		$render_args = self::build_render_args( $config, $referrer, $state, $city );
 
@@ -175,6 +234,10 @@ class Embed {
 		$parent_url      = $parent_url;
 		$parent_host     = $parent_host;
 		$parent_referrer = $parent_referrer;
+		$bg_color        = $bg_color;
+		$border_color    = $border_color;
+		$text_color      = $text_color;
+		$font_family     = $font_family;
 
 		include $template_path;
 	}

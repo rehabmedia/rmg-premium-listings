@@ -3,7 +3,7 @@
  * Embed Template for Listing Cards
  *
  * Minimal HTML template for iframe embedding.
- * Variables available: $config, $render_args, $referrer, $state, $city
+ * Variables available: $config, $render_args, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer, $bg_color, $border_color, $text_color, $font_family
  *
  * @package RMG_Premium_Listings
  */
@@ -181,9 +181,49 @@ add_action(
 		}
 		body {
 			background: transparent;
-			font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 			padding-top: 0;
+			min-height: 361px;
 		}
+		<?php
+		// Inject CSS variables from query parameters if provided.
+		$css_vars = array();
+		if ( ! empty( $bg_color ) ) {
+			$css_vars[] = '--rmg-bg-color: ' . esc_attr( $bg_color ) . ';';
+		}
+		if ( ! empty( $border_color ) ) {
+			$css_vars[] = '--rmg-border-color: ' . esc_attr( $border_color ) . ';';
+		}
+		if ( ! empty( $text_color ) ) {
+			$css_vars[] = '--rmg-text-color: ' . esc_attr( $text_color ) . ';';
+		}
+		if ( ! empty( $font_family ) ) {
+			$css_vars[] = '--rmg-font-family: ' . esc_attr( $font_family ) . ';';
+		}
+		if ( ! empty( $heading_color ) ) {
+			$css_vars[] = '--rmg-heading-color: ' . esc_attr( $heading_color ) . ';';
+		}
+		if ( ! empty( $text_hover_color ) ) {
+			$css_vars[] = '--rmg-text-hover-color: ' . esc_attr( $text_hover_color ) . ';';
+		}
+		if ( ! empty( $border_hover_color ) ) {
+			$css_vars[] = '--rmg-border-hover-color: ' . esc_attr( $border_hover_color ) . ';';
+		}
+		if ( ! empty( $padding ) ) {
+			$css_vars[] = '--rmg-padding: ' . esc_attr( $padding ) . ';';
+		}
+		if ( ! empty( $margin ) ) {
+			$css_vars[] = '--rmg-margin: ' . esc_attr( $margin ) . ';';
+		}
+
+		if ( ! empty( $css_vars ) ) :
+			?>
+		:root {
+			<?php echo implode( "\n\t\t\t", $css_vars ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped above. ?>
+
+		}
+			<?php
+		endif;
+		?>
 	</style>
 </head>
 <body class="rmg-embed-body">

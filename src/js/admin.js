@@ -115,6 +115,8 @@ import '../scss/admin.scss';
 				document.getElementById( 'city-override' ).value =
 					selectedOption.dataset.city || '';
 
+				// All styling options now come from config.displayOptions in JSON.
+
 				this.showValidationMessage(
 					'Configuration loaded successfully.',
 					'success'
@@ -211,6 +213,13 @@ import '../scss/admin.scss';
 			document.getElementById( 'referrer-site' ).value = '';
 			document.getElementById( 'state-override' ).value = '';
 			document.getElementById( 'city-override' ).value = '';
+
+			// Reset styling options.
+			document.getElementById( 'custom-classname' ).value = '';
+			document.getElementById( 'background-color' ).value = '';
+			document.getElementById( 'border-color' ).value = '';
+			document.getElementById( 'text-color' ).value = '';
+			document.getElementById( 'font-family' ).value = '';
 
 			this.showValidationMessage(
 				'All fields reset to default values.',
@@ -334,15 +343,71 @@ import '../scss/admin.scss';
 				params.append( 'city', city );
 			}
 
+			// Extract display options from config JSON.
+			if ( config.displayOptions ) {
+				if ( config.displayOptions.bgColor ) {
+					params.append( 'bg_color', config.displayOptions.bgColor );
+				}
+				if ( config.displayOptions.borderColor ) {
+					params.append(
+						'border_color',
+						config.displayOptions.borderColor
+					);
+				}
+				if ( config.displayOptions.textColor ) {
+					params.append(
+						'text_color',
+						config.displayOptions.textColor
+					);
+				}
+				if ( config.displayOptions.headingColor ) {
+					params.append(
+						'heading_color',
+						config.displayOptions.headingColor
+					);
+				}
+				if ( config.displayOptions.textHoverColor ) {
+					params.append(
+						'text_hover_color',
+						config.displayOptions.textHoverColor
+					);
+				}
+				if ( config.displayOptions.borderHoverColor ) {
+					params.append(
+						'border_hover_color',
+						config.displayOptions.borderHoverColor
+					);
+				}
+				if ( config.displayOptions.fontFamily ) {
+					params.append(
+						'font_family',
+						config.displayOptions.fontFamily
+					);
+				}
+				if ( config.displayOptions.padding ) {
+					params.append( 'padding', config.displayOptions.padding );
+				}
+				if ( config.displayOptions.margin ) {
+					params.append( 'margin', config.displayOptions.margin );
+				}
+			}
+
 			const embedUrl = `${
 				window.location.origin
 			}/embed/listing-cards/?${ params.toString() }`;
 
-			// Store the URL for later use (copy URL button).
+			// Store the URL and custom classname for later use.
 			this.currentEmbedUrl = embedUrl;
+			this.customClassname =
+				config.displayOptions && config.displayOptions.classname
+					? config.displayOptions.classname
+					: '';
 
 			// Generate embed code.
-			const embedCode = this.generateEmbedCode( embedUrl );
+			const embedCode = this.generateEmbedCode(
+				embedUrl,
+				this.customClassname
+			);
 
 			// Display embed code.
 			const embedCodeEl = document.getElementById( 'embed-code' );
@@ -387,12 +452,16 @@ import '../scss/admin.scss';
 		/**
 		 * Generate the embed code snippet.
 		 *
-		 * @param {string} url Embed URL.
+		 * @param {string} url       Embed URL.
+		 * @param {string} classname Optional custom CSS classname.
 		 * @return {string} Embed code.
 		 */
-		generateEmbedCode( url ) {
+		generateEmbedCode( url, classname = '' ) {
+			const divClass = classname
+				? `rmg-premium-listings-embed ${ classname }`
+				: 'rmg-premium-listings-embed';
 			return `<!-- RMG Premium Listings Embed -->
-<div id="rmg-premium-listings-embed"></div>
+<div id="rmg-premium-listings-embed" class="${ divClass }"></div>
 <script>
 (function() {
 	var u = new URL('${ url }');
