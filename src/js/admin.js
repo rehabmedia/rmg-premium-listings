@@ -16,6 +16,37 @@ import '../scss/admin.scss';
 		init() {
 			this.bindEvents();
 			this.setupEmbedResize();
+			this.checkEmbedSections();
+		},
+
+		/**
+		 * Check if embed sections should be visible on page load.
+		 * If a config is loaded (from transient after save), auto-generate embed.
+		 */
+		checkEmbedSections() {
+			const embedCodeEl = document.getElementById( 'embed-code' );
+			const embedOutput = document.getElementById( 'embed-output' );
+			const embedPreview = document.getElementById( 'embed-preview' );
+			const configJson = document.getElementById( 'config-json' );
+			const savedConfigsDropdown = document.getElementById( 'saved-configs' );
+
+			// If embed code exists, show the sections.
+			if ( embedCodeEl && embedCodeEl.textContent.trim() !== '' ) {
+				if ( embedOutput ) {
+					embedOutput.style.display = 'block';
+				}
+				if ( embedPreview ) {
+					embedPreview.style.display = 'block';
+				}
+			}
+
+			// If a config is selected and JSON is populated, auto-generate embed.
+			if ( savedConfigsDropdown && savedConfigsDropdown.value !== '' && configJson && configJson.value.trim() !== '' ) {
+				// Small delay to ensure DOM is ready.
+				setTimeout( () => {
+					this.generateEmbed();
+				}, 100 );
+			}
 		},
 
 		/**
@@ -214,12 +245,15 @@ import '../scss/admin.scss';
 			document.getElementById( 'state-override' ).value = '';
 			document.getElementById( 'city-override' ).value = '';
 
-			// Reset styling options.
-			document.getElementById( 'custom-classname' ).value = '';
-			document.getElementById( 'background-color' ).value = '';
-			document.getElementById( 'border-color' ).value = '';
-			document.getElementById( 'text-color' ).value = '';
-			document.getElementById( 'font-family' ).value = '';
+			// Hide embed sections on reset.
+			const embedOutput = document.getElementById( 'embed-output' );
+			const embedPreview = document.getElementById( 'embed-preview' );
+			if ( embedOutput ) {
+				embedOutput.style.display = 'none';
+			}
+			if ( embedPreview ) {
+				embedPreview.style.display = 'none';
+			}
 
 			this.showValidationMessage(
 				'All fields reset to default values.',
