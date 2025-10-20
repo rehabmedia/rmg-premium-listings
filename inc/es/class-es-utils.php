@@ -138,6 +138,7 @@ class ES_Utils {
 			return 2000;
 		}
 
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found -- Not commented code, just a descriptive comment.
 		// Free (default, 0 = Free).
 		return 1000;
 	}

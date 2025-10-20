@@ -119,7 +119,7 @@ add_filter(
 			$is_admin_preview = ( strpos( $parent_url, '/wp-admin/' ) !== false || strpos( $parent_url, 'page=rmg-premium-listings-embed' ) !== false );
 		}
 
-		// Add parent page data to config for impression tracking JavaScript
+		// Add parent page data to config for impression tracking JavaScript.
 		$config['parentUrl']      = $parent_url;
 		$config['parentHost']     = $parent_host;
 		$config['parentReferrer'] = $parent_referrer;

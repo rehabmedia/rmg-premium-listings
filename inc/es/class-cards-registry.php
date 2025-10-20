@@ -78,7 +78,9 @@ class Cards_Registry {
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
 			// Debug: Check what context we're in.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
 			error_log( 'Register called - REST_REQUEST: ' . ( defined( 'REST_REQUEST' ) ? 'true' : 'false' ) );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
 			error_log( 'IDs to register: ' . implode( ',', $ids ) );
 		}
 
@@ -117,7 +119,9 @@ class Cards_Registry {
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
 			// Debug: Check what we're retrieving.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
 			error_log( 'Get displayed - REST_REQUEST: ' . ( defined( 'REST_REQUEST' ) ? 'true' : 'false' ) );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.WP.AlternativeFunctions.json_encode_json_encode -- Intentional debug logging.
 			error_log( 'Displayed: ' . json_encode( $displayed ) );
 		}
 
