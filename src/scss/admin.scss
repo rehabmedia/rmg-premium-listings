@@ -4,20 +4,31 @@
  * @package RMG_Premium_Listings
  */
 
-.rmg-premium-listings-admin {
-	max-width: 1400px;
+// Animations
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
 
+// Main Container
+.rmg-premium-listings-admin {
+	max-width: 1400px;
+
+	.notice {
+		margin: 1.5rem 0;
+	}
+}
+
+// Layout
 .rmg-admin-container {
 	display: flex;
 	gap: 2rem;
 	margin-top: 2rem;
-	margin-bottom: 2rem;
-}
-
-// Full-width sections (embed output and preview)
-.rmg-full-width {
-	max-width: 1400px;
 }
 
 .rmg-admin-main {
@@ -26,186 +37,191 @@
 }
 
 .rmg-admin-sidebar {
-	width: 300px;
 	flex-shrink: 0;
+	width: 300px;
 }
 
+// Full-width sections (embed output and preview)
+.rmg-full-width {
+	max-width: 1400px;
+}
+
+// Card Component
 .rmg-card {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
-	padding: 1.5rem;
 	margin-bottom: 1.5rem;
+	padding: 1.5rem;
+
+	h2 {
+		border-bottom: 1px solid #e0e0e0;
+		font-size: 1.3em;
+		margin-bottom: 1rem;
+		margin-top: 0;
+		padding-bottom: 0.5rem;
+	}
+
+	h3 {
+		font-size: 1.1em;
+		margin-bottom: 1rem;
+		margin-top: 0;
+	}
 }
 
-.rmg-card h2 {
-	margin-top: 0;
-	margin-bottom: 1rem;
-	font-size: 1.3em;
-	border-bottom: 1px solid #e0e0e0;
-	padding-bottom: 0.5rem;
-}
-
-.rmg-card h3 {
-	margin-top: 0;
-	margin-bottom: 1rem;
-	font-size: 1.1em;
-}
-
+// Form Elements
 .rmg-form-row {
 	margin-bottom: 1.5rem;
-}
 
-.rmg-form-row:last-child {
-	margin-bottom: 0;
-}
+	&:last-child {
+		margin-bottom: 0;
+	}
 
-.rmg-form-row label {
-	display: block;
-	margin-bottom: 0.5rem;
-	font-weight: 600;
-}
+	label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
 
-.rmg-form-row .description {
-	margin-top: 0.5rem;
-	color: #646970;
-	font-size: 13px;
+	.description {
+		color: #646970;
+		font-size: 13px;
+		margin-top: 0.5rem;
+	}
 }
 
 .rmg-form-group {
+	align-items: center;
 	display: flex;
 	gap: 0.5rem;
-	align-items: center;
+
+	select {
+		flex: 1;
+	}
 }
 
-.rmg-form-group select {
-	flex: 1;
-}
-
+// Button Group
 .rmg-button-group {
+	align-items: center;
 	display: flex;
 	gap: 0.5rem;
-	align-items: center;
 }
 
+// JSON Config Textarea
 #config-json {
-	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-	font-size: 13px;
-	line-height: 1.6;
-	tab-size: 2;
 	background: #f6f7f7;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+	font-size: 13px;
+	line-height: 1.6;
 	padding: 1rem;
+	tab-size: 2;
 }
 
+// Validation Messages
 .rmg-validation-message {
-	margin-top: 1rem;
-	padding: 0.75rem 1rem;
 	border-left: 4px solid;
 	border-radius: 4px;
 	display: none;
+	margin-top: 1rem;
+	padding: 0.75rem 1rem;
+
+	&.success {
+		background: #ecf7ed;
+		border-color: #46b450;
+		color: #205723;
+	}
+
+	&.error {
+		background: #fcf0f1;
+		border-color: #d63638;
+		color: #5a1a1c;
+	}
 }
 
-.rmg-validation-message.success {
-	background: #ecf7ed;
-	border-color: #46b450;
-	color: #205723;
-}
-
-.rmg-validation-message.error {
-	background: #fcf0f1;
-	border-color: #d63638;
-	color: #5a1a1c;
-}
-
+// Code Output
 .rmg-code-output {
 	background: #f6f7f7;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
-	padding: 1rem;
 	margin: 1rem 0;
 	overflow: auto;
+	padding: 1rem;
+
+	pre {
+		margin: 0;
+	}
+
+	code {
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+		font-size: 12px;
+		line-height: 1.6;
+		white-space: pre;
+		word-wrap: normal;
+	}
 }
 
-.rmg-code-output pre {
-	margin: 0;
-}
-
-.rmg-code-output code {
-	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-	font-size: 12px;
-	line-height: 1.6;
-	white-space: pre;
-	word-wrap: normal;
-}
-
+// Copy Success Message
 .rmg-copy-success {
+	animation: fadeIn 0.3s;
 	color: #46b450;
 	font-weight: 600;
 	margin-left: 1rem;
-	animation: fadeIn 0.3s;
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
+// Preview Container
 .rmg-preview-container {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
-	padding: 1rem;
 	// Force minimum width to ensure slidesToShow CSS variable is applied in iframe
 	// The listing cards use 1200px breakpoint for --slides-to-show calculation
 	min-width: 1200px;
 	overflow-x: auto;
+	padding: 1rem;
+
+	iframe {
+		background: #fff;
+		border: none;
+		border-radius: 4px;
+		// Ensure iframe is at least 1200px to trigger the media query inside
+		min-width: 1200px;
+		width: 100%;
+	}
 }
 
-.rmg-preview-container iframe {
-	width: 100%;
-	// Ensure iframe is at least 1200px to trigger the media query inside
-	min-width: 1200px;
-	background: #fff;
-	border: none;
-	border-radius: 4px;
-}
-
+// Help List
 .rmg-help-list {
 	margin: 0;
+
+	dt {
+		color: #135e96;
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+		font-size: 13px;
+		margin-bottom: 0.25rem;
+		margin-top: 1rem;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	dd {
+		color: #646970;
+		font-size: 13px;
+		margin: 0 0 0 1rem;
+	}
+
+	code {
+		background: #f0f0f1;
+		border-radius: 3px;
+		font-size: 12px;
+		padding: 2px 6px;
+	}
 }
 
-.rmg-help-list dt {
-	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-	font-size: 13px;
-	margin-top: 1rem;
-	margin-bottom: 0.25rem;
-	color: #135e96;
-}
-
-.rmg-help-list dt:first-child {
-	margin-top: 0;
-}
-
-.rmg-help-list dd {
-	margin: 0 0 0 1rem;
-	color: #646970;
-	font-size: 13px;
-}
-
-.rmg-help-list code {
-	background: #f0f0f1;
-	padding: 2px 6px;
-	border-radius: 3px;
-	font-size: 12px;
-}
-
-/* Responsive */
+// Responsive
 @media (max-width: 1200px) {
 	.rmg-admin-container {
 		flex-direction: column;
@@ -214,9 +230,4 @@
 	.rmg-admin-sidebar {
 		width: 100%;
 	}
-}
-
-/* WordPress admin notices spacing */
-.rmg-premium-listings-admin .notice {
-	margin: 1.5rem 0;
 }
