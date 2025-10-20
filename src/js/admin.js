@@ -395,35 +395,22 @@ import '../scss/admin.scss';
 <div id="rmg-premium-listings-embed"></div>
 <script>
 (function() {
-	// Capture parent page information for impression tracking
-	var parentUrl = window.location.href;
-	var parentHost = window.location.hostname;
-	var parentReferrer = document.referrer || '';
-	var parentTitle = document.title;
+	var u = new URL('${ url }');
+	u.searchParams.append('parent_url', location.href);
+	u.searchParams.append('parent_host', location.hostname);
+	u.searchParams.append('parent_referrer', document.referrer);
+	u.searchParams.append('parent_title', document.title);
 
-	// Append parent page data to iframe URL
-	// Note: URLSearchParams.append() automatically encodes values
-	var urlObj = new URL('${ url }');
-	urlObj.searchParams.append('parent_url', parentUrl);
-	urlObj.searchParams.append('parent_host', parentHost);
-	urlObj.searchParams.append('parent_referrer', parentReferrer);
-	urlObj.searchParams.append('parent_title', parentTitle);
+	var i = document.createElement('iframe');
+	i.src = u;
+	i.style.cssText = 'width:100%;border:none;overflow:hidden';
+	i.scrolling = 'no';
 
-	var iframe = document.createElement('iframe');
-	iframe.src = urlObj.toString();
-	iframe.style.width = '100%';
-	iframe.style.border = 'none';
-	iframe.style.overflow = 'hidden';
-	iframe.setAttribute('scrolling', 'no');
-
-	// Handle iframe resizing.
-	window.addEventListener('message', function(e) {
-		if (e.data.type === 'rmg-embed-resize') {
-			iframe.style.height = e.data.height + 'px';
-		}
+	addEventListener('message', function(e) {
+		if (e.data.type === 'rmg-embed-resize') i.style.height = e.data.height + 'px';
 	});
 
-	document.getElementById('rmg-premium-listings-embed').appendChild(iframe);
+	document.getElementById('rmg-premium-listings-embed').appendChild(i);
 })();
 </script>`;
 		},
