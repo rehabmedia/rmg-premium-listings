@@ -118,6 +118,13 @@ class ES_Query {
 	 */
 	private $user_location_override = null;
 
+	/**
+	 * Context data (contains state, city, page_type overrides for embeds)
+	 *
+	 * @var array
+	 */
+	private $context = array();
+
 
 	/**
 	 * Get listing cards data.
@@ -160,6 +167,9 @@ class ES_Query {
 	 */
 	public function init( array $args ): array {
 		try {
+			// Store context for embed overrides.
+			$this->context = $args['context'] ?? array();
+
 			$this->page_type = $this->get_page_type();
 
 			// Check if user location is provided in args.
@@ -184,15 +194,18 @@ class ES_Query {
 			unset( $cache_params['slides_to_show'] );
 			unset( $cache_params['layout'] );
 
-			// Create cache key.
+			// Create cache key including state/city overrides.
 			$cache_key = 'rmg_es_' . md5(
 				wp_json_encode(
 					array_merge(
 						$cache_params,
 						array(
-							'url'      => sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
-							'seed'     => $this->get_randomization_seed(),
-							'location' => $this->location,
+							'url'       => sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
+							'seed'      => $this->get_randomization_seed(),
+							'location'  => $this->location,
+							'state'     => $this->context['state'] ?? '',
+							'city'      => $this->context['city'] ?? '',
+							'page_type' => $this->page_type,
 						)
 					)
 				)
@@ -313,6 +326,20 @@ class ES_Query {
 	 * @return string The page type.
 	 */
 	public function get_page_type(): string {
+		// Check context first (for embeds with overrides).
+		if ( ! empty( $this->context['page_type'] ) ) {
+			return $this->context['page_type'];
+		}
+
+		// Otherwise derive page_type from context state/city.
+		if ( ! empty( $this->context['city'] ) ) {
+			return self::PAGE_TYPE_CITY;
+		}
+		if ( ! empty( $this->context['state'] ) ) {
+			return self::PAGE_TYPE_STATE;
+		}
+
+		// Fall back to WordPress query context.
 		if ( is_tax() ) {
 			$taxonomy = get_queried_object()->taxonomy;
 
@@ -369,7 +396,16 @@ class ES_Query {
 
 		$term = null;
 
-		if ( self::PAGE_TYPE_REHAB_CENTER === $this->page_type ) {
+		// For city pages with context override (embeds), try to find the city term.
+		if ( self::PAGE_TYPE_CITY === $this->page_type && ! empty( $this->context['city'] ) ) {
+			// Try to find the city term by slug in the rehab-centers taxonomy.
+			$term = get_term_by( 'slug', $this->context['city'], 'rehab-centers' );
+
+			// If city not found, return empty array to fall back to state filtering.
+			if ( ! $term ) {
+				return array();
+			}
+		} elseif ( self::PAGE_TYPE_REHAB_CENTER === $this->page_type ) {
 			$term = Utilities::rmg_get_primary_term( $this->post_id, 'rehab-centers' );
 		} else {
 			$term = get_queried_object();
@@ -620,8 +656,8 @@ class ES_Query {
 			);
 		}
 
-		// Add state filter for state pages.
-		if ( self::PAGE_TYPE_STATE === $this->page_type ) {
+		// Add state filter for state pages, or for city pages with no location (fallback).
+		if ( self::PAGE_TYPE_STATE === $this->page_type || ( self::PAGE_TYPE_CITY === $this->page_type && empty( $this->location ) ) ) {
 			$state_slug = $this->get_state_slug();
 			if ( $state_slug ) {
 				$query['query']['bool']['must'][] = array(
@@ -660,14 +696,20 @@ class ES_Query {
 	}
 
 	/**
-	 * Get state slug for state pages.
+	 * Get state slug for state pages or city pages (when falling back).
 	 */
 	private function get_state_slug(): ?string {
-		// Only need this for state pages.
-		if ( self::PAGE_TYPE_STATE !== $this->page_type ) {
+		// Only need this for state pages, or city pages when falling back.
+		if ( self::PAGE_TYPE_STATE !== $this->page_type && self::PAGE_TYPE_CITY !== $this->page_type ) {
 			return null;
 		}
 
+		// Check context for state override (for embeds).
+		if ( ! empty( $this->context['state'] ) ) {
+			return $this->context['state'];
+		}
+
+		// Fall back to WordPress query context.
 		$term = get_queried_object();
 		if ( ! $term || ! isset( $term->slug ) ) {
 			return null;
