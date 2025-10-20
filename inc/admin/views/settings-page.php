@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $default_json = wp_json_encode(
 	array(
-		'layout'        => 'slider',
+		'layout'        => 'three-column',
 		'hasBackground' => false,
 		'actionType'    => 'none',
 		'isInline'      => false,
@@ -123,17 +123,12 @@ $default_json = wp_json_encode(
 						<p class="description">
 							<?php esc_html_e( 'Configure the embed settings using JSON.', 'rmg-premium-listings' ); ?>
 						</p>
-						<div class="rmg-button-group" style="display: flex; justify-content: space-between; align-items: center;">
-							<div>
-								<button type="button" id="validate-json" class="button">
-									<?php esc_html_e( 'Validate JSON', 'rmg-premium-listings' ); ?>
-								</button>
-								<button type="button" id="format-json" class="button">
-									<?php esc_html_e( 'Format JSON', 'rmg-premium-listings' ); ?>
-								</button>
-							</div>
-							<button type="button" id="reset-template" class="button button-link-delete">
-								<?php esc_html_e( 'Reset Template', 'rmg-premium-listings' ); ?>
+						<div class="rmg-button-group">
+							<button type="button" id="validate-json" class="button">
+								<?php esc_html_e( 'Validate JSON', 'rmg-premium-listings' ); ?>
+							</button>
+							<button type="button" id="format-json" class="button">
+								<?php esc_html_e( 'Format JSON', 'rmg-premium-listings' ); ?>
 							</button>
 						</div>
 						<div id="validation-message" class="rmg-validation-message"></div>
@@ -183,32 +178,22 @@ $default_json = wp_json_encode(
 						</p>
 					</div>
 				</div>
+
+				<!-- Actions -->
+				<div class="rmg-card">
+					<div class="rmg-button-group actions">
+						<button type="submit" class="button button-primary button-large">
+							<?php esc_html_e( 'Save Configuration', 'rmg-premium-listings' ); ?>
+						</button>
+						<button type="button" id="generate-embed" class="button button-secondary button-large">
+							<?php esc_html_e( 'Generate Embed Code', 'rmg-premium-listings' ); ?>
+						</button>
+						<button type="button" id="reset-template" class="button button-link-delete button-large">
+							<?php esc_html_e( 'Reset Template', 'rmg-premium-listings' ); ?>
+						</button>
+					</div>
+				</div>
 			</form>
-
-			<!-- Generated Embed Code -->
-			<div id="embed-output" class="rmg-card" style="display: none;">
-				<h2><?php esc_html_e( 'Generated Embed Code', 'rmg-premium-listings' ); ?></h2>
-				<p class="description">
-					<?php esc_html_e( 'Copy and paste this code into your website where you want the listing cards to appear.', 'rmg-premium-listings' ); ?>
-				</p>
-				<div class="rmg-code-output">
-					<pre><code id="embed-code"></code></pre>
-				</div>
-				<button type="button" id="copy-embed" class="button button-primary">
-					<?php esc_html_e( 'Copy to Clipboard', 'rmg-premium-listings' ); ?>
-				</button>
-				<span id="copy-success" class="rmg-copy-success" style="display: none;">
-					<?php esc_html_e( 'Copied!', 'rmg-premium-listings' ); ?>
-				</span>
-			</div>
-
-			<!-- Preview -->
-			<div id="embed-preview" class="rmg-card" style="display: none;">
-				<h2><?php esc_html_e( 'Preview', 'rmg-premium-listings' ); ?></h2>
-				<div class="rmg-preview-container">
-					<iframe id="preview-iframe" frameborder="0" width="100%" style="min-height: 400px;"></iframe>
-				</div>
-			</div>
 		</div>
 
 		<div class="rmg-admin-sidebar">
@@ -262,18 +247,39 @@ $default_json = wp_json_encode(
 					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Display insurance badge.', 'rmg-premium-listings' ); ?></dd>
 				</dl>
 			</div>
+		</div>
+	</div>
 
-			<!-- Actions -->
-			<div class="rmg-card">
-				<div class="rmg-button-group actions">
-					<button type="submit" class="button button-primary button-large">
-						<?php esc_html_e( 'Save Configuration', 'rmg-premium-listings' ); ?>
-					</button>
-					<button type="button" id="generate-embed" class="button button-secondary button-large">
-						<?php esc_html_e( 'Generate Embed Code', 'rmg-premium-listings' ); ?>
-					</button>
-				</div>
-			</div>
+	<!-- Generated Embed Code (Full Width) -->
+	<div id="embed-output" class="rmg-card rmg-full-width" style="display: none;">
+		<h2><?php esc_html_e( 'Generated Embed Code', 'rmg-premium-listings' ); ?></h2>
+		<p class="description">
+			<?php esc_html_e( 'Copy and paste this code into your website where you want the listing cards to appear.', 'rmg-premium-listings' ); ?>
+		</p>
+		<div class="rmg-code-output">
+			<pre><code id="embed-code"></code></pre>
+		</div>
+		<div class="rmg-button-group">
+			<button type="button" id="copy-embed" class="button button-primary">
+				<?php esc_html_e( 'Copy Embed to Clipboard', 'rmg-premium-listings' ); ?>
+			</button>
+			<button type="button" id="copy-url" class="button button-secondary">
+				<?php esc_html_e( 'Copy URL to Clipboard', 'rmg-premium-listings' ); ?>
+			</button>
+			<span id="copy-success" class="rmg-copy-success" style="display: none;">
+				<?php esc_html_e( 'Copied!', 'rmg-premium-listings' ); ?>
+			</span>
+			<span id="url-copy-success" class="rmg-copy-success" style="display: none;">
+				<?php esc_html_e( 'URL Copied!', 'rmg-premium-listings' ); ?>
+			</span>
+		</div>
+	</div>
+
+	<!-- Preview (Full Width) -->
+	<div id="embed-preview" class="rmg-card rmg-full-width" style="display: none;">
+		<h2><?php esc_html_e( 'Preview', 'rmg-premium-listings' ); ?></h2>
+		<div class="rmg-preview-container">
+			<iframe id="preview-iframe" frameborder="0" width="100%"></iframe>
 		</div>
 	</div>
 </div>

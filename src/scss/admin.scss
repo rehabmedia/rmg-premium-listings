@@ -12,6 +12,12 @@
 	display: flex;
 	gap: 2rem;
 	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+// Full-width sections (embed output and preview)
+.rmg-full-width {
+	max-width: 1400px;
 }
 
 .rmg-admin-main {
@@ -79,10 +85,7 @@
 .rmg-button-group {
 	display: flex;
 	gap: 0.5rem;
-
-	&.actions {
-		flex-direction: column;
-	}
+	align-items: center;
 }
 
 #config-json {
@@ -122,7 +125,6 @@
 	border-radius: 4px;
 	padding: 1rem;
 	margin: 1rem 0;
-	max-height: 400px;
 	overflow: auto;
 }
 
@@ -155,15 +157,22 @@
 }
 
 .rmg-preview-container {
-	background: #f0f0f1;
+	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
 	padding: 1rem;
-	min-height: 400px;
+	// Force minimum width to ensure slidesToShow CSS variable is applied in iframe
+	// The listing cards use 1200px breakpoint for --slides-to-show calculation
+	min-width: 1200px;
+	overflow-x: auto;
 }
 
 .rmg-preview-container iframe {
+	width: 100%;
+	// Ensure iframe is at least 1200px to trigger the media query inside
+	min-width: 1200px;
 	background: #fff;
+	border: none;
 	border-radius: 4px;
 }
 
