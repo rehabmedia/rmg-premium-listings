@@ -89,6 +89,10 @@
 	@include hide-scrollbar;
 }
 
+.rmg-embed-body .wp-block-rmg-premium-listings-cards {
+	margin: var(--rmg-margin, 0);
+}
+
 // Base component styles
 .wp-block-rmg-premium-listings-cards {
 	color: var(--rmg-color-core-primary);
