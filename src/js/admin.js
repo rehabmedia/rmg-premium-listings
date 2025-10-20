@@ -31,6 +31,7 @@ import '../scss/admin.scss';
 			const generateEmbedBtn =
 				document.getElementById( 'generate-embed' );
 			const copyEmbedBtn = document.getElementById( 'copy-embed' );
+			const copyUrlBtn = document.getElementById( 'copy-url' );
 
 			if ( loadConfigBtn ) {
 				loadConfigBtn.addEventListener(
@@ -74,6 +75,12 @@ import '../scss/admin.scss';
 					this.copyEmbed.bind( this )
 				);
 			}
+			if ( copyUrlBtn ) {
+				copyUrlBtn.addEventListener(
+					'click',
+					this.copyUrl.bind( this )
+				);
+			}
 		},
 
 		/**
@@ -85,6 +92,7 @@ import '../scss/admin.scss';
 			const configData = selectedOption.dataset.config;
 
 			if ( ! configData ) {
+				// eslint-disable-next-line no-alert
 				alert( 'Please select a configuration to load.' );
 				return;
 			}
@@ -127,11 +135,13 @@ import '../scss/admin.scss';
 			const configName = select.value;
 
 			if ( ! configName ) {
+				// eslint-disable-next-line no-alert
 				alert( 'Please select a configuration to delete.' );
 				return;
 			}
 
 			if (
+				// eslint-disable-next-line no-alert
 				! confirm(
 					`Are you sure you want to delete the configuration "${ configName }"?`
 				)
@@ -147,8 +157,17 @@ import '../scss/admin.scss';
 		 * Reset to default template.
 		 */
 		resetTemplate() {
+			if (
+				// eslint-disable-next-line no-alert
+				! confirm(
+					'Are you sure you want to reset all fields to default values?'
+				)
+			) {
+				return;
+			}
+
 			const template = {
-				layout: 'slider',
+				layout: 'three-column',
 				hasBackground: false,
 				actionType: 'none',
 				isInline: false,
@@ -175,13 +194,26 @@ import '../scss/admin.scss';
 				},
 			};
 
+			// Reset JSON configuration.
 			document.getElementById( 'config-json' ).value = JSON.stringify(
 				template,
 				null,
 				2
 			);
+
+			// Reset configuration name.
+			document.getElementById( 'config-name' ).value = '';
+
+			// Reset saved configuration dropdown.
+			document.getElementById( 'saved-configs' ).value = '';
+
+			// Reset override parameters.
+			document.getElementById( 'referrer-site' ).value = '';
+			document.getElementById( 'state-override' ).value = '';
+			document.getElementById( 'city-override' ).value = '';
+
 			this.showValidationMessage(
-				'Template reset successfully.',
+				'All fields reset to default values.',
 				'success'
 			);
 		},
@@ -206,9 +238,10 @@ import '../scss/admin.scss';
 			// Send to server for schema validation.
 			const formData = new FormData();
 			formData.append( 'action', 'rmg_validate_json' );
-			formData.append( 'nonce', rmgPremiumListings.nonce );
+			formData.append( 'nonce', rmgPremiumListings.nonce ); // eslint-disable-line no-undef
 			formData.append( 'json', json );
 
+			// eslint-disable-next-line no-undef
 			fetch( rmgPremiumListings.ajaxUrl, {
 				method: 'POST',
 				credentials: 'same-origin',
@@ -305,6 +338,9 @@ import '../scss/admin.scss';
 				window.location.origin
 			}/embed/listing-cards/?${ params.toString() }`;
 
+			// Store the URL for later use (copy URL button).
+			this.currentEmbedUrl = embedUrl;
+
 			// Generate embed code.
 			const embedCode = this.generateEmbedCode( embedUrl );
 
@@ -317,8 +353,23 @@ import '../scss/admin.scss';
 			embedCodeEl.textContent = embedCode;
 			embedOutput.style.display = 'block';
 
-			// Show preview.
-			previewIframe.src = embedUrl;
+			// Show preview with parent page parameters for admin preview detection.
+			const previewUrl = new URL( embedUrl, window.location.origin );
+			// Note: URLSearchParams.append() automatically encodes values, so we don't use encodeURIComponent
+			previewUrl.searchParams.append(
+				'parent_url',
+				window.location.href
+			);
+			previewUrl.searchParams.append(
+				'parent_host',
+				window.location.hostname
+			);
+			previewUrl.searchParams.append(
+				'parent_referrer',
+				document.referrer || ''
+			);
+			previewUrl.searchParams.append( 'parent_title', document.title );
+			previewIframe.src = previewUrl.toString();
 			embedPreview.style.display = 'block';
 
 			this.showValidationMessage(
@@ -344,8 +395,22 @@ import '../scss/admin.scss';
 <div id="rmg-premium-listings-embed"></div>
 <script>
 (function() {
+	// Capture parent page information for impression tracking
+	var parentUrl = window.location.href;
+	var parentHost = window.location.hostname;
+	var parentReferrer = document.referrer || '';
+	var parentTitle = document.title;
+
+	// Append parent page data to iframe URL
+	// Note: URLSearchParams.append() automatically encodes values
+	var urlObj = new URL('${ url }');
+	urlObj.searchParams.append('parent_url', parentUrl);
+	urlObj.searchParams.append('parent_host', parentHost);
+	urlObj.searchParams.append('parent_referrer', parentReferrer);
+	urlObj.searchParams.append('parent_title', parentTitle);
+
 	var iframe = document.createElement('iframe');
-	iframe.src = '${ url }';
+	iframe.src = urlObj.toString();
 	iframe.style.width = '100%';
 	iframe.style.border = 'none';
 	iframe.style.overflow = 'hidden';
@@ -391,6 +456,46 @@ import '../scss/admin.scss';
 					copySuccess.style.display = 'inline';
 					setTimeout( () => {
 						copySuccess.style.display = 'none';
+					}, 2000 );
+				} );
+		},
+
+		/**
+		 * Copy embed URL to clipboard.
+		 */
+		copyUrl() {
+			const url = this.currentEmbedUrl;
+			const urlCopySuccess = document.getElementById( 'url-copy-success' );
+
+			if ( ! url ) {
+				this.showValidationMessage(
+					'Please generate embed code first.',
+					'error'
+				);
+				return;
+			}
+
+			navigator.clipboard
+				.writeText( url )
+				.then( () => {
+					urlCopySuccess.style.display = 'inline';
+					setTimeout( () => {
+						urlCopySuccess.style.display = 'none';
+					}, 2000 );
+				} )
+				.catch( () => {
+					// Fallback for older browsers.
+					const textarea = document.createElement( 'textarea' );
+					textarea.value = url;
+					textarea.style.position = 'fixed';
+					textarea.style.opacity = '0';
+					document.body.appendChild( textarea );
+					textarea.select();
+					document.execCommand( 'copy' );
+					document.body.removeChild( textarea );
+					urlCopySuccess.style.display = 'inline';
+					setTimeout( () => {
+						urlCopySuccess.style.display = 'none';
 					}, 2000 );
 				} );
 		},
