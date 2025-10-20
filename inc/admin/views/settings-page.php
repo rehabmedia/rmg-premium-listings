@@ -78,6 +78,7 @@ $default_json = wp_json_encode(
 							<select id="saved-configs" class="regular-text">
 								<option value=""><?php esc_html_e( '-- Select a configuration --', 'rmg-premium-listings' ); ?></option>
 								<?php foreach ( $configs as $name => $config_data ) : ?>
+									<?php $is_selected = ( ! empty( $last_saved['name'] ) && $last_saved['name'] === $name ); ?>
 									<?php
 									// Handle both old format (direct config) and new format (with overrides).
 									$config    = isset( $config_data['config'] ) ? $config_data['config'] : $config_data;
@@ -94,6 +95,7 @@ $default_json = wp_json_encode(
 									);
 									?>
 									<option value="<?php echo esc_attr( $name ); ?>"
+										<?php selected( $is_selected, true ); ?>
 										data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>"
 										data-referrer="<?php echo esc_attr( $overrides['referrer'] ); ?>"
 										data-state="<?php echo esc_attr( $overrides['state'] ); ?>"
@@ -204,13 +206,15 @@ $default_json = wp_json_encode(
 
 				<!-- Actions -->
 				<div class="rmg-card">
-					<div class="rmg-button-group actions">
-						<button type="submit" class="button button-primary button-large">
-							<?php esc_html_e( 'Save Configuration', 'rmg-premium-listings' ); ?>
-						</button>
-						<button type="button" id="generate-embed" class="button button-secondary button-large">
-							<?php esc_html_e( 'Generate Embed Code', 'rmg-premium-listings' ); ?>
-						</button>
+					<div class="rmg-button-group actions" style="display: flex; justify-content: space-between; align-items: center;">
+						<div>
+							<button type="submit" class="button button-primary button-large">
+								<?php esc_html_e( 'Save Configuration', 'rmg-premium-listings' ); ?>
+							</button>
+							<button type="button" id="generate-embed" class="button button-secondary button-large">
+								<?php esc_html_e( 'Generate Embed Code', 'rmg-premium-listings' ); ?>
+							</button>
+						</div>
 						<button type="button" id="reset-template" class="button button-link-delete button-large">
 							<?php esc_html_e( 'Reset Template', 'rmg-premium-listings' ); ?>
 						</button>
