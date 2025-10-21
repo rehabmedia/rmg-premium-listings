@@ -352,9 +352,21 @@ import '../scss/admin.scss';
 				return;
 			}
 
+			// Check if a saved config is selected to use ref-based URL.
+			const savedConfigsDropdown = document.getElementById( 'saved-configs' );
+			const selectedOption = savedConfigsDropdown.options[ savedConfigsDropdown.selectedIndex ];
+			const ref = selectedOption.dataset.ref || '';
+
 			// Build query parameters.
 			const params = new URLSearchParams();
-			params.append( 'config', btoa( JSON.stringify( config ) ) );
+
+			// Use ref parameter if available (cleaner URLs for saved configs).
+			if ( ref ) {
+				params.append( 'ref', ref );
+			} else {
+				// Fall back to full config parameter.
+				params.append( 'config', btoa( JSON.stringify( config ) ) );
+			}
 
 			const referrer = document
 				.getElementById( 'referrer-site' )

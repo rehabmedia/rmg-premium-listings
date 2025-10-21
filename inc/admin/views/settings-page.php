@@ -16,18 +16,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $default_json = wp_json_encode(
 	array(
-		'layout'        => 'three-column',
-		'hasBackground' => false,
-		'actionType'    => 'none',
-		'isInline'      => false,
-		'slidesToShow'  => 3,
-		'headline'      => array(
+		'layout'         => 'three-column',
+		'hasBackground'  => false,
+		'actionType'     => 'none',
+		'isInline'       => false,
+		'slidesToShow'   => 3,
+		'headline'       => array(
 			'show'      => true,
 			'text'      => __( 'Featured Facilities Near You', 'rmg-premium-listings' ),
 			'alignment' => 'left',
 			'tag'       => 2,
 		),
-		'selectedTerms' => array(
+		'selectedTerms'  => array(
 			'amenities'        => array(),
 			'clinicalServices' => array(),
 			'levelsOfCare'     => array(),
@@ -35,7 +35,7 @@ $default_json = wp_json_encode(
 			'programs'         => array(),
 			'treatmentOptions' => array(),
 		),
-		'cardOptions'   => array(
+		'cardOptions'    => array(
 			'hasBackground' => false,
 			'showRank'      => true,
 			'showAddress'   => true,
@@ -94,10 +94,13 @@ $default_json = wp_json_encode(
 										'padding'     => '',
 										'margin'      => '',
 									);
+									// Get ref ID (generate from name if not stored).
+									$ref = isset( $config_data['ref'] ) ? $config_data['ref'] : sanitize_key( $name );
 									?>
 									<option value="<?php echo esc_attr( $name ); ?>"
 										<?php selected( $is_selected, true ); ?>
 										data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>"
+										data-ref="<?php echo esc_attr( $ref ); ?>"
 										data-referrer="<?php echo esc_attr( $overrides['referrer'] ); ?>"
 										data-state="<?php echo esc_attr( $overrides['state'] ); ?>"
 										data-city="<?php echo esc_attr( $overrides['city'] ); ?>"

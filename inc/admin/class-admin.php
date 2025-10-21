@@ -148,6 +148,9 @@ class Admin {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in handle_form_submission().
 		$city = isset( $_POST['city_override'] ) ? sanitize_text_field( wp_unslash( $_POST['city_override'] ) ) : '';
 
+		// Generate reference ID from config name (sanitized for URL use).
+		$ref = sanitize_key( $config_name );
+
 		// Get existing configs.
 		$configs = get_option( self::OPTION_NAME, array() );
 
@@ -159,8 +162,12 @@ class Admin {
 				'state'    => $state,
 				'city'     => $city,
 			),
+			'ref'       => $ref, // Store reference ID with config.
 		);
 		update_option( self::OPTION_NAME, $configs );
+
+		// Also save to Embed class storage for ref-based lookups.
+		Embed::save_config( $ref, $config );
 
 		// Store last saved config in transient for form repopulation.
 		set_transient(
@@ -171,6 +178,7 @@ class Admin {
 				'referrer' => $referrer,
 				'state'    => $state,
 				'city'     => $city,
+				'ref'      => $ref,
 			),
 			300 // 5 minutes.
 		);
@@ -201,8 +209,15 @@ class Admin {
 		$configs = get_option( self::OPTION_NAME, array() );
 
 		if ( isset( $configs[ $config_name ] ) ) {
+			// Get the ref ID before deleting.
+			$ref = isset( $configs[ $config_name ]['ref'] ) ? $configs[ $config_name ]['ref'] : sanitize_key( $config_name );
+
+			// Delete from admin storage.
 			unset( $configs[ $config_name ] );
 			update_option( self::OPTION_NAME, $configs );
+
+			// Also delete from Embed class storage.
+			Embed::delete_saved_config( $ref );
 
 			add_settings_error(
 				'rmg_embed_settings',
