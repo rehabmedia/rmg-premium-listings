@@ -96,17 +96,57 @@ The plugin includes a WordPress admin page for generating embeddable listing wid
 
 **Features**:
 - Visual configuration builder with live preview
-- Save/load configuration presets
+- Save/load configuration presets with reference IDs
 - JSON editor with validation
 - Override parameters (state, city, referrer)
 - Copy embed code or URL to clipboard
 - Auto-resize iframes for dynamic content
+- Support for both ref-based and config-based URLs
 
 **Usage**:
 1. Configure display options (layout, filters, card options)
-2. Click "Generate Embed Code"
-3. Copy the embed code to your website
-4. The iframe automatically resizes to fit content
+2. Save configuration with a descriptive name
+3. Click "Generate Embed Code"
+4. Copy the embed code to your website
+5. The iframe automatically resizes to fit content
+
+**URL Formats**:
+
+The embed endpoint supports three URL formats:
+
+1. **Reference-based** (recommended for saved configs):
+   ```
+   /embed/listing-cards/?ref=homepage-featured&state=california
+   ```
+   - Cleanest URL format
+   - Configuration stored in database
+   - Easy to update centrally
+   - Display options included in saved config
+
+2. **Config-based** (backward compatible):
+   ```
+   /embed/listing-cards/?config=eyJsYXlvdXQiOiJ0aHJl...
+   ```
+   - Full configuration in URL (base64-encoded JSON)
+   - No database dependency
+   - Good for testing/one-off embeds
+   - Display options included in config JSON
+
+3. **Defaults** (fallback):
+   ```
+   /embed/listing-cards/
+   ```
+   - Uses default configuration
+   - No parameters needed
+
+**Supported URL Parameters**:
+- `ref` - Reference ID for saved configuration
+- `config` - Base64-encoded JSON configuration
+- `referrer` - Referrer site (for tracking)
+- `state` - State override for location-based results
+- `city` - City override for location-based results
+
+**Note**: Display options (colors, fonts, padding, etc.) are configured in the JSON and stored with the configuration—they are not passed as URL parameters.
 
 See [templates/README.md](templates/README.md) for technical details on how iframe resizing works.
 
