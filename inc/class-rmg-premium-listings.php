@@ -58,6 +58,9 @@ class RMG_Premium_Listings {
 		// Initialize embed system.
 		\RMG_Premium_Listings\Embed::init();
 
+		// Initialize block migration.
+		\RMG_Premium_Listings\Block_Migration::init();
+
 		// Initialize admin if in admin context.
 		if ( is_admin() ) {
 			\RMG_Premium_Listings\Admin::init();
@@ -90,6 +93,9 @@ class RMG_Premium_Listings {
 		if ( is_admin() ) {
 			require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/admin/class-admin.php';
 		}
+
+		// Block migration handler.
+		require_once RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/class-block-migration.php';
 	}
 
 	/**
