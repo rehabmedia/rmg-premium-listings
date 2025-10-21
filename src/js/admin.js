@@ -389,57 +389,8 @@ import '../scss/admin.scss';
 				params.append( 'city', city );
 			}
 
-			// Extract display options from config JSON.
-			if ( config.displayOptions ) {
-				if ( config.displayOptions.bgColor ) {
-					params.append( 'bg_color', config.displayOptions.bgColor );
-				}
-				if ( config.displayOptions.borderColor ) {
-					params.append(
-						'border_color',
-						config.displayOptions.borderColor
-					);
-				}
-				if ( config.displayOptions.textColor ) {
-					params.append(
-						'text_color',
-						config.displayOptions.textColor
-					);
-				}
-				if ( config.displayOptions.headingColor ) {
-					params.append(
-						'heading_color',
-						config.displayOptions.headingColor
-					);
-				}
-				if ( config.displayOptions.textHoverColor ) {
-					params.append(
-						'text_hover_color',
-						config.displayOptions.textHoverColor
-					);
-				}
-				if ( config.displayOptions.borderHoverColor ) {
-					params.append(
-						'border_hover_color',
-						config.displayOptions.borderHoverColor
-					);
-				}
-				if ( config.displayOptions.fontFamily ) {
-					params.append(
-						'font_family',
-						config.displayOptions.fontFamily
-					);
-				}
-				if ( config.displayOptions.padding ) {
-					params.append( 'padding', config.displayOptions.padding );
-				}
-				if ( config.displayOptions.margin ) {
-					params.append( 'margin', config.displayOptions.margin );
-				}
-				if ( config.displayOptions.borderRadius ) {
-					params.append( 'border_radius', config.displayOptions.borderRadius );
-				}
-			}
+			// Display options are now part of the config (not URL parameters).
+			// They will be loaded from the saved config or encoded config parameter.
 
 			const embedUrl = `${
 				window.location.origin
@@ -509,8 +460,10 @@ import '../scss/admin.scss';
 			const divClass = classname
 				? `rmg-premium-listings-embed ${ classname }`
 				: 'rmg-premium-listings-embed';
+			// Generate unique ID using timestamp.
+			const uniqueId = 'rmg-premium-listings-embed-' + Date.now();
 			return `<!-- RMG Premium Listings Embed -->
-<div id="rmg-premium-listings-embed" class="${ divClass }"></div>
+<div id="${ uniqueId }" class="${ divClass }"></div>
 <script>
 (function() {
 	var u = new URL('${ url }');
@@ -528,7 +481,7 @@ import '../scss/admin.scss';
 		if (e.data.type === 'rmg-embed-resize') i.style.height = e.data.height + 'px';
 	});
 
-	document.getElementById('rmg-premium-listings-embed').appendChild(i);
+	document.getElementById('${ uniqueId }').appendChild(i);
 })();
 </script>`;
 		},

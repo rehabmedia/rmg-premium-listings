@@ -83,27 +83,18 @@ class Embed {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
 		$parent_referrer = isset( $_GET['parent_referrer'] ) ? esc_url_raw( wp_unslash( $_GET['parent_referrer'] ) ) : '';
 
-		// Get styling options.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$bg_color = isset( $_GET['bg_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['bg_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$border_color = isset( $_GET['border_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['border_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$text_color = isset( $_GET['text_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['text_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$font_family = isset( $_GET['font_family'] ) ? sanitize_text_field( wp_unslash( $_GET['font_family'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$heading_color = isset( $_GET['heading_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['heading_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$text_hover_color = isset( $_GET['text_hover_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['text_hover_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$border_hover_color = isset( $_GET['border_hover_color'] ) ? self::sanitize_css_color( wp_unslash( $_GET['border_hover_color'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$padding = isset( $_GET['padding'] ) ? sanitize_text_field( wp_unslash( $_GET['padding'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$margin = isset( $_GET['margin'] ) ? sanitize_text_field( wp_unslash( $_GET['margin'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
-		$border_radius = isset( $_GET['border_radius'] ) ? sanitize_text_field( wp_unslash( $_GET['border_radius'] ) ) : '';
+		// Extract display options from config (not from URL parameters).
+		$display_options    = isset( $config['displayOptions'] ) ? $config['displayOptions'] : array();
+		$bg_color           = isset( $display_options['bgColor'] ) ? $display_options['bgColor'] : '';
+		$border_color       = isset( $display_options['borderColor'] ) ? $display_options['borderColor'] : '';
+		$text_color         = isset( $display_options['textColor'] ) ? $display_options['textColor'] : '';
+		$font_family        = isset( $display_options['fontFamily'] ) ? $display_options['fontFamily'] : '';
+		$heading_color      = isset( $display_options['headingColor'] ) ? $display_options['headingColor'] : '';
+		$text_hover_color   = isset( $display_options['textHoverColor'] ) ? $display_options['textHoverColor'] : '';
+		$border_hover_color = isset( $display_options['borderHoverColor'] ) ? $display_options['borderHoverColor'] : '';
+		$padding            = isset( $display_options['padding'] ) ? $display_options['padding'] : '';
+		$margin             = isset( $display_options['margin'] ) ? $display_options['margin'] : '';
+		$border_radius      = isset( $display_options['borderRadius'] ) ? $display_options['borderRadius'] : '';
 
 		// Load the embed template.
 		self::load_embed_template( $config, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer, $bg_color, $border_color, $text_color, $font_family, $heading_color, $text_hover_color, $border_hover_color, $padding, $margin, $border_radius );
