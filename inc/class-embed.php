@@ -59,6 +59,12 @@ class Embed {
 			return;
 		}
 
+		// Remove restrictive headers and allow embedding on any domain.
+		header_remove( 'Content-Security-Policy' );
+		header_remove( 'X-Frame-Options' );
+		header( 'Content-Security-Policy: frame-ancestors *;' );
+		header( 'X-Frame-Options: ALLOWALL' );
+
 		// Get configuration (supports ref, config, or defaults).
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
 		$ref = isset( $_GET['ref'] ) ? sanitize_key( wp_unslash( $_GET['ref'] ) ) : '';
