@@ -1,18 +1,1 @@
-/*!******************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/listing-cards/editor.scss ***!
-  \******************************************************************************************************************************************************************************************************************************************************/
-.wp-block-rmg-premium-listings-cards .cards-grid .listing-card .card-title a {
-  pointer-events: none;
-}
-.wp-block-rmg-premium-listings-cards .cards-grid.layout-three-column .slider-container, .wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-container {
-  opacity: 1;
-}
-.wp-block-rmg-premium-listings-cards .cards-grid.layout-three-column .slider-container .listing-card, .wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-container .listing-card {
-  flex: 0 0 calc(100% / var(--slides-to-show) - calc((3 + (var(--slides-to-show) - 2) * 0.25) * 1rem));
-  max-width: calc(100% / var(--slides-to-show));
-  min-width: 0;
-}
-.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-next:not(:disabled),
-.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-pref:not(:disabled) {
-  opacity: 1 !important;
-}
+.wp-block-rmg-premium-listings-cards .cards-grid .listing-card .card-title a{pointer-events:none}.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-container,.wp-block-rmg-premium-listings-cards .cards-grid.layout-three-column .slider-container{opacity:1}.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-container .listing-card,.wp-block-rmg-premium-listings-cards .cards-grid.layout-three-column .slider-container .listing-card{flex:0 0 calc(100%/var(--slides-to-show) - (3 + (var(--slides-to-show) - 2)*0.25)*1rem);max-width:calc(100%/var(--slides-to-show));min-width:0}.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-next:not(:disabled),.wp-block-rmg-premium-listings-cards .cards-grid.layout-slider .slider-pref:not(:disabled){opacity:1!important}
