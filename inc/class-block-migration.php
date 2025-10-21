@@ -22,6 +22,7 @@ class Block_Migration {
 
 		add_filter( 'render_block', array( __CLASS__, 'migrate_legacy_block' ), 10, 2 );
 		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'enqueue_migration_script' ) );
+		add_action( 'rest_api_init', array( __CLASS__, 'register_legacy_rest_routes' ) );
 	}
 
 	/**
@@ -60,6 +61,77 @@ class Block_Migration {
 
 		// Render the new block with the same attributes.
 		return render_block( $migrated_block );
+	}
+
+	/**
+	 * Register legacy REST API routes.
+	 *
+	 * Creates alias routes for old endpoint names to redirect to new endpoints.
+	 */
+	public static function register_legacy_rest_routes() {
+		// Register the old endpoint as an alias to the new one.
+		register_rest_route(
+			'rmg/v1',
+			'/listing-cards-v2',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'proxy_to_new_endpoint' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+	}
+
+	/**
+	 * Proxy legacy REST requests to the new endpoint.
+	 *
+	 * @param \WP_REST_Request $request The REST request object.
+	 * @return \WP_REST_Response|\WP_Error The response from the new endpoint.
+	 */
+	public static function proxy_to_new_endpoint( $request ) {
+		// Log the proxying for debugging.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Block Migration: Proxying legacy endpoint /listing-cards-v2 to /premium-listing-cards' );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Original params: ' . wp_json_encode( $request->get_params() ) );
+		}
+
+		// Create a new request to the updated endpoint.
+		$new_request = new \WP_REST_Request( 'POST', '/rmg/v1/premium-listing-cards' );
+
+		// Copy all parameters from the old request.
+		// Use get_params() to get the merged view of all parameters.
+		foreach ( $request->get_params() as $key => $value ) {
+			$new_request->set_param( $key, $value );
+		}
+
+		// Copy JSON body if present.
+		$body = $request->get_body();
+		if ( ! empty( $body ) ) {
+			$new_request->set_body( $body );
+		}
+
+		// Copy headers.
+		foreach ( $request->get_headers() as $key => $value ) {
+			$new_request->set_header( $key, $value );
+		}
+
+		// Execute the new endpoint and return its response.
+		$response = rest_do_request( $new_request );
+
+		// Log response for debugging.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$response_data = $response->get_data();
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Proxied response success: ' . ( $response_data['success'] ? 'true' : 'false' ) );
+			if ( isset( $response_data['meta'] ) ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Response meta: ' . wp_json_encode( $response_data['meta'] ) );
+			}
+		}
+
+		// Return the response data directly if it's a WP_REST_Response.
+		return rest_ensure_response( $response );
 	}
 
 	/**
