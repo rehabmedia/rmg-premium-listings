@@ -20,6 +20,7 @@ rmg-premium-listings/
 ├── inc/
 │   ├── class-rmg-premium-listings.php         # Main plugin class
 │   ├── class-asset-manager.php                # Asset enqueuing
+│   ├── class-block-migration.php              # Legacy block compatibility
 │   ├── class-embed.php                        # Embed endpoint handler
 │   ├── class-cards-renderer.php               # Card rendering logic
 │   ├── admin/
@@ -127,6 +128,18 @@ See [inc/es/README.md](inc/es/README.md) for complete filter documentation.
 
 ### Key Filters
 
+**`rmg_premium_listings_wrapper_classes`**
+- Modify CSS classes applied to the listing cards block wrapper
+- Useful for backward compatibility or custom styling
+- Parameters: `$class_parts` (array), `$args` (array)
+- Example:
+  ```php
+  add_filter( 'rmg_premium_listings_wrapper_classes', function( $classes, $args ) {
+      $classes[] = 'my-custom-class';
+      return $classes;
+  }, 10, 2 );
+  ```
+
 **`rmg_listing_cards_v2_displayed_post_ids`**
 - Tracks displayed post IDs to prevent duplicates
 - Applied after each query
@@ -163,11 +176,46 @@ The plugin implements an intelligent budget pacing system for Premium+ listings:
 
 See [inc/es/README.md](inc/es/README.md) for complete Premium+ documentation.
 
+## Block Migration & Backward Compatibility
+
+The plugin includes automatic migration from the legacy `rmg-blocks/listing-cards-v2` block:
+
+### What's Migrated
+
+**Block Name**: `rmg-blocks/listing-cards-v2` → `rmg-premium-listings/cards`
+- Automatic runtime conversion during render
+- Editor transformation for block updates
+- No manual migration required
+
+**PHP Class Aliases**:
+- `Listing_Cards_V2` → `RMG_Premium_Listings\Cards_Renderer`
+- `RMG_Blocks\Listing_Cards_V2` → `RMG_Premium_Listings\Cards_Renderer`
+
+**REST API Endpoint**:
+- Legacy: `/wp-json/rmg/v1/listing-cards-v2`
+- New: `/wp-json/rmg/v1/premium-listing-cards`
+- Legacy endpoint automatically proxies to new endpoint
+
+**CSS Classes**: Legacy classes automatically added via filter
+- `wp-block-rmg-blocks-listing-cards-v2`
+- `listing-cards-v2`
+
+### Removing Migration Support
+
+When all sites have migrated, you can safely remove backward compatibility:
+
+1. Delete `inc/class-block-migration.php`
+2. Delete `src/js/block-migration.js`
+3. Remove initialization in `inc/class-rmg-premium-listings.php`
+4. Run `npm run build`
+
+All migration code is isolated for easy removal.
+
 ## REST API
 
 ### Endpoints
 
-**`/wp-json/rmg-premium-listings/v1/listing-cards`**
+**`POST /wp-json/rmg/v1/premium-listing-cards`**
 
 Retrieves filtered listing cards with Premium+ prioritization.
 
@@ -176,11 +224,20 @@ Retrieves filtered listing cards with Premium+ prioritization.
 - `card_count` - Number of cards to return (default: 3)
 - `exclude_displayed` - Boolean to exclude already displayed IDs
 - `selected_terms[taxonomy]` - Array of term slugs to filter by
+- `fetch_location` - Boolean to fetch user location from headers
 
 **Example**:
+```bash
+curl -X POST https://example.com/wp-json/rmg/v1/premium-listing-cards \
+  -H "Content-Type: application/json" \
+  -d '{"action_type":"filtered","card_count":6,"selected_terms":{"treatmentOptions":["detox"],"levelsOfCare":["inpatient"]}}'
 ```
-/wp-json/rmg-premium-listings/v1/listing-cards?action_type=filtered&card_count=6&selected_terms[treatmentOptions][]=detox&selected_terms[levelsOfCare][]=inpatient
+
+**Legacy Endpoint** (backward compatibility):
 ```
+POST /wp-json/rmg/v1/listing-cards-v2
+```
+Automatically proxied to the new endpoint with all parameters preserved.
 
 ## Version
 

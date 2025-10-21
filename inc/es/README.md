@@ -73,6 +73,36 @@ add_filter( 'rmg_listing_randomization_interval', function( $interval ) {
 - Should typically match or be a multiple of `CACHE_DURATION`
 - Affects the balance between content variety and cache efficiency
 
+### 3. `rmg_premium_listings_wrapper_classes`
+
+**Purpose**: Modifies the CSS classes applied to the listing cards block wrapper element during rendering.
+
+**Parameters**:
+- `$class_parts` (array): Array of CSS class names to be applied to the wrapper
+- `$args` (array): The rendering arguments for the block instance
+
+**Usage Example**:
+```php
+// Add custom classes for styling
+add_filter( 'rmg_premium_listings_wrapper_classes', function( $classes, $args ) {
+    // Add a custom class
+    $classes[] = 'my-custom-class';
+
+    // Add conditional classes based on layout
+    if ( 'slider' === $args['layout'] ) {
+        $classes[] = 'custom-slider-class';
+    }
+
+    return $classes;
+}, 10, 2 );
+```
+
+**Notes**:
+- Useful for backward compatibility (e.g., legacy block class names)
+- Can be used to add custom CSS hooks for styling
+- Classes are applied to the outermost wrapper element
+- The Block_Migration class uses this filter to add legacy class names
+
 ## Method: `init()`
 
 ### Parameters
