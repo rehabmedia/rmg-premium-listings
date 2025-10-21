@@ -66,13 +66,49 @@ class Block_Migration {
 	 * Enqueue editor script to handle block transformation.
 	 */
 	public static function enqueue_migration_script() {
-		$asset_file = include RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'build/js/block-migration.asset.php';
+		self::enqueue_asset(
+			'block-migration',
+			'js/block-migration.js'
+		);
+	}
 
+	/**
+	 * Enqueue a single asset file.
+	 *
+	 * Helper method to enqueue assets with proper dependency handling.
+	 * Similar pattern to Asset_Manager but specific to migration needs.
+	 * This keeps all migration-related code isolated for easy removal later.
+	 *
+	 * @param string $handle   The script/style handle (without 'rmg-' prefix).
+	 * @param string $rel_path Relative path from build directory (e.g., 'js/block-migration.js').
+	 * @return void
+	 */
+	private static function enqueue_asset( string $handle, string $rel_path ): void {
+		$file_path  = RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'build/' . $rel_path;
+		$asset_file = str_replace( '.js', '.asset.php', $file_path );
+
+		// Bail if the main file doesn't exist.
+		if ( ! file_exists( $file_path ) ) {
+			return;
+		}
+
+		// Get asset data (dependencies and version) from .asset.php file.
+		$asset_data = file_exists( $asset_file )
+			? require $asset_file
+			: array(
+				'dependencies' => array(),
+				'version'      => RMG_PREMIUM_LISTINGS_VERSION,
+			);
+
+		// Build the URL - ensure proper trailing slash handling.
+		$asset_url = trailingslashit( RMG_PREMIUM_LISTINGS_PLUGIN_URL ) . 'build/' . $rel_path;
+
+		// Enqueue the script with dependencies.
 		wp_enqueue_script(
-			'rmg-block-migration',
-			plugins_url( 'build/js/block-migration.js', RMG_PREMIUM_LISTINGS_PLUGIN_DIR ),
-			$asset_file['dependencies'],
-			$asset_file['version'],
+			'rmg-' . $handle,
+			$asset_url,
+			$asset_data['dependencies'],
+			$asset_data['version'],
 			true
 		);
 	}
