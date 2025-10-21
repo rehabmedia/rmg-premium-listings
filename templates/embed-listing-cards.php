@@ -214,6 +214,9 @@ add_action(
 		if ( ! empty( $margin ) ) {
 			$css_vars[] = '--rmg-margin: ' . esc_attr( $margin ) . ';';
 		}
+		if ( ! empty( $border_radius ) ) {
+			$css_vars[] = '--rmg-border-radius: ' . esc_attr( $border_radius ) . ';';
+		}
 
 		if ( ! empty( $css_vars ) ) :
 			?>

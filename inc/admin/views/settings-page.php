@@ -51,6 +51,7 @@ $default_json = wp_json_encode(
 			'fontFamily'       => '',
 			'padding'          => '',
 			'margin'           => '',
+			'borderRadius'     => '16px',
 			'classname'        => '',
 		),
 	),
@@ -299,6 +300,9 @@ $default_json = wp_json_encode(
 
 					<dt><code>displayOptions.margin</code></dt>
 					<dd><?php esc_html_e( 'Block margin. e.g., "0 auto" or "20px 0"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-margin</code></dd>
+
+					<dt><code>displayOptions.borderRadius</code></dt>
+					<dd><?php esc_html_e( 'Border radius for cards and container. e.g., "16px" or "8px". Default: "16px"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-radius</code></dd>
 
 					<dt><code>displayOptions.classname</code></dt>
 					<dd><?php esc_html_e( 'Custom CSS class(es) added to embed container. Supports space-separated values.', 'rmg-premium-listings' ); ?></dd>

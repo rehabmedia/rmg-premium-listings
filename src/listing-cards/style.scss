@@ -102,7 +102,7 @@
 
 	&.has-background {
 		background: var(--rmg-bg-color, var(--rmg-very-light-blue));
-		border-radius: 16px;
+		border-radius: var(--rmg-border-radius, 16px);
 		padding: var(--rmg-padding, 1.5rem);
 	}
 
@@ -150,7 +150,7 @@
 
 	// Card styles
 	.listing-card {
-		border-radius: 16px;
+		border-radius: var(--rmg-border-radius, 16px);
 		border: 2px solid var(--rmg-border-color, var(--rmg-color-core-primary));
 		overflow: hidden;
 		padding: 1rem;

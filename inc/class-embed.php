@@ -99,9 +99,11 @@ class Embed {
 		$padding = isset( $_GET['padding'] ) ? sanitize_text_field( wp_unslash( $_GET['padding'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
 		$margin = isset( $_GET['margin'] ) ? sanitize_text_field( wp_unslash( $_GET['margin'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$border_radius = isset( $_GET['border_radius'] ) ? sanitize_text_field( wp_unslash( $_GET['border_radius'] ) ) : '';
 
 		// Load the embed template.
-		self::load_embed_template( $config, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer, $bg_color, $border_color, $text_color, $font_family, $heading_color, $text_hover_color, $border_hover_color, $padding, $margin );
+		self::load_embed_template( $config, $referrer, $state, $city, $parent_url, $parent_host, $parent_referrer, $bg_color, $border_color, $text_color, $font_family, $heading_color, $text_hover_color, $border_hover_color, $padding, $margin, $border_radius );
 		exit;
 	}
 
@@ -213,8 +215,9 @@ class Embed {
 	 * @param string $border_hover_color Border hover color.
 	 * @param string $padding            Block padding.
 	 * @param string $margin             Block margin.
+	 * @param string $border_radius      Border radius.
 	 */
-	private static function load_embed_template( array $config, string $referrer, string $state, string $city, string $parent_url = '', string $parent_host = '', string $parent_referrer = '', string $bg_color = '', string $border_color = '', string $text_color = '', string $font_family = '', string $heading_color = '', string $text_hover_color = '', string $border_hover_color = '', string $padding = '', string $margin = '' ): void {
+	private static function load_embed_template( array $config, string $referrer, string $state, string $city, string $parent_url = '', string $parent_host = '', string $parent_referrer = '', string $bg_color = '', string $border_color = '', string $text_color = '', string $font_family = '', string $heading_color = '', string $text_hover_color = '', string $border_hover_color = '', string $padding = '', string $margin = '', string $border_radius = '' ): void {
 		// Set up render arguments.
 		$render_args = self::build_render_args( $config, $referrer, $state, $city );
 
@@ -238,6 +241,7 @@ class Embed {
 		$border_color    = $border_color;
 		$text_color      = $text_color;
 		$font_family     = $font_family;
+		$border_radius   = $border_radius;
 
 		include $template_path;
 	}

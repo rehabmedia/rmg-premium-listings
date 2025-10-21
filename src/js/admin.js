@@ -424,6 +424,9 @@ import '../scss/admin.scss';
 				if ( config.displayOptions.margin ) {
 					params.append( 'margin', config.displayOptions.margin );
 				}
+				if ( config.displayOptions.borderRadius ) {
+					params.append( 'border_radius', config.displayOptions.borderRadius );
+				}
 			}
 
 			const embedUrl = `${
