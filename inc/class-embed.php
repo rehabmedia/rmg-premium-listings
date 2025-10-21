@@ -59,10 +59,13 @@ class Embed {
 			return;
 		}
 
-		// Get and decode configuration.
+		// Get configuration (supports ref, config, or defaults).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
+		$ref = isset( $_GET['ref'] ) ? sanitize_key( wp_unslash( $_GET['ref'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
 		$config_encoded = isset( $_GET['config'] ) ? sanitize_text_field( wp_unslash( $_GET['config'] ) ) : '';
-		$config         = self::decode_config( $config_encoded );
+
+		$config = self::get_config( $ref, $config_encoded );
 
 		// Get optional override parameters.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
@@ -135,6 +138,52 @@ class Embed {
 
 		// Invalid color value.
 		return '';
+	}
+
+	/**
+	 * Get configuration using ref, encoded config, or defaults.
+	 *
+	 * Priority order:
+	 * 1. Load by reference from database if ref provided
+	 * 2. Decode config parameter if provided
+	 * 3. Use defaults
+	 *
+	 * @param string $ref            Reference ID for saved config.
+	 * @param string $config_encoded Encoded configuration string.
+	 * @return array Configuration array.
+	 */
+	private static function get_config( string $ref, string $config_encoded ): array {
+		// Priority 1: Load by reference from database.
+		if ( ! empty( $ref ) ) {
+			$saved_config = self::get_saved_config_by_ref( $ref );
+			if ( ! empty( $saved_config ) ) {
+				return wp_parse_args( $saved_config, self::get_default_config() );
+			}
+		}
+
+		// Priority 2: Use encoded config from URL.
+		if ( ! empty( $config_encoded ) ) {
+			return self::decode_config( $config_encoded );
+		}
+
+		// Priority 3: Use defaults.
+		return self::get_default_config();
+	}
+
+	/**
+	 * Get saved configuration by reference ID.
+	 *
+	 * @param string $ref Reference ID.
+	 * @return array|null Saved configuration array or null if not found.
+	 */
+	private static function get_saved_config_by_ref( string $ref ): ?array {
+		$saved_configs = get_option( 'rmg_premium_listings_saved_configs', array() );
+
+		if ( ! is_array( $saved_configs ) || ! isset( $saved_configs[ $ref ] ) ) {
+			return null;
+		}
+
+		return $saved_configs[ $ref ];
 	}
 
 	/**
@@ -304,6 +353,57 @@ class Embed {
 				'data-city'     => $city,
 			),
 		);
+	}
+
+	/**
+	 * Save configuration with a reference ID.
+	 *
+	 * @param string $ref    Reference ID (must be unique).
+	 * @param array  $config Configuration array to save.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function save_config( string $ref, array $config ): bool {
+		if ( empty( $ref ) ) {
+			return false;
+		}
+
+		$saved_configs = get_option( 'rmg_premium_listings_saved_configs', array() );
+		if ( ! is_array( $saved_configs ) ) {
+			$saved_configs = array();
+		}
+
+		$saved_configs[ $ref ] = $config;
+
+		return update_option( 'rmg_premium_listings_saved_configs', $saved_configs );
+	}
+
+	/**
+	 * Get all saved configurations.
+	 *
+	 * @return array Array of saved configurations keyed by reference ID.
+	 */
+	public static function get_all_saved_configs(): array {
+		$saved_configs = get_option( 'rmg_premium_listings_saved_configs', array() );
+
+		return is_array( $saved_configs ) ? $saved_configs : array();
+	}
+
+	/**
+	 * Delete a saved configuration by reference ID.
+	 *
+	 * @param string $ref Reference ID.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function delete_saved_config( string $ref ): bool {
+		$saved_configs = get_option( 'rmg_premium_listings_saved_configs', array() );
+
+		if ( ! is_array( $saved_configs ) || ! isset( $saved_configs[ $ref ] ) ) {
+			return false;
+		}
+
+		unset( $saved_configs[ $ref ] );
+
+		return update_option( 'rmg_premium_listings_saved_configs', $saved_configs );
 	}
 
 	/**
