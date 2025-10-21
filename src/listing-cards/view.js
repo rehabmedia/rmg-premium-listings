@@ -7,14 +7,15 @@ import NativeScrollSlider from 'native-scroll-slider';
 const ListingCardsModule = ( () => {
 	const SELECTORS = {
 		container:
-			'.listing-cards.layout-slider.wp-block-rmg-premium-listings-listing-cards',
-		tabContainer: '.listing-cards.action-tabs',
+			'.premium-listing-cards.layout-slider, .wp-block-rmg-premium-listings-cards.layout-slider',
+		tabContainer:
+			'.premium-listing-cards.action-tabs, .wp-block-rmg-premium-listings-cards.action-tabs',
 		sliderTrack: '.slider-container',
 		tabPanel: '[role="tabpanel"]',
 		tabButton: '.tab-button[role="tab"]',
 		tabList: '.listing-tabs',
 		locationPlaceholder:
-			'.listing-cards-placeholder[data-requires-location="true"]',
+			'.premium-listing-cards.listing-cards-placeholder[data-requires-location="true"], .wp-block-rmg-premium-listings-cards.listing-cards-placeholder[data-requires-location="true"]',
 	};
 
 	const ATTRS = {
@@ -109,6 +110,7 @@ const ListingCardsModule = ( () => {
 						const visibleCards =
 							getVisibleCardsInSlider( trackElement );
 						if ( 0 < visibleCards.length ) {
+							// eslint-disable-next-line no-console
 							console.log(
 								`Slider scroll detected, setting up tracking for ${ visibleCards.length } visible cards`
 							);
@@ -125,6 +127,7 @@ const ListingCardsModule = ( () => {
 			}
 			return true;
 		} catch ( error ) {
+			// eslint-disable-next-line no-console
 			console.error( 'Error creating slider:', error );
 			return false;
 		}
@@ -405,12 +408,15 @@ const ListingCardsModule = ( () => {
 				if ( data.success && data.html ) {
 					replacePlaceholder( placeholder, data.html );
 				} else {
+					// eslint-disable-next-line no-console
 					console.error(
 						'No data in response for',
-						`#${ placeholder.id }`
+						`#${ placeholder.id }`,
+						data
 					);
 				}
 			} catch ( error ) {
+				// eslint-disable-next-line no-console
 				console.error(
 					'Error loading listings:',
 					error,

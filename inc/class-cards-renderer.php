@@ -19,7 +19,7 @@ class Cards_Renderer {
 	 *
 	 * @var string
 	 */
-	private const BLOCK_NAME = 'rmg-premium-listings/listing-cards';
+	private const BLOCK_NAME = 'rmg-premium-listings/cards';
 
 	/**
 	 * Default arguments for rendering.
@@ -333,6 +333,8 @@ class Cards_Renderer {
 	private function get_wrapper_attributes(): string {
 		// Build the wrapper classes.
 		$class_parts = array(
+			'wp-block-rmg-blocks-listing-cards-v2', // Legacy class support.
+			'listing-cards-v2', // Legacy class support.
 			'premium-listing-cards',
 			'layout-' . sanitize_html_class( $this->args['layout'] ),
 			'action-' . sanitize_html_class( $this->args['action_type'] ),

@@ -97,7 +97,7 @@
 .wp-block-rmg-premium-listings-cards {
 	color: var(--rmg-color-core-primary);
 	font-family: var(--rmg-font-family, 'Lato', sans-serif);
-	margin: var(--rmg-margin, 0 0 2rem 0);
+	margin: var(--rmg-margin, 0 auto 2rem);
 	width: 100%;
 
 	&.has-background {
@@ -481,6 +481,7 @@
 				display: flex;
 				flex-flow: row nowrap;
 				gap: 1.5rem;
+				opacity: 1;
 				transition: opacity 0.3s ease;
 
 				@include scroll-snap-container;
@@ -515,7 +516,7 @@
 		// Slider specific styles
 		&.layout-slider {
 
-			.slider-container {
+			.slider-container:not([data-slider-initialized]) {
 				opacity: 0;
 			}
 
