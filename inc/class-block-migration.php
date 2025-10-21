@@ -75,10 +75,7 @@ class Block_Migration {
 	 * This allows sites that have custom CSS targeting the old classes to continue working.
 	 *
 	 * @param array $class_parts Array of CSS class names.
-	 * @param array $args        The rendering arguments for this block instance.
 	 * @return array Modified array of CSS class names.
-	 *
-	 * @phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args required by filter signature.
 	 */
 	public static function add_legacy_wrapper_classes( array $class_parts ): array {
 		// Prepend legacy classes to the array.
