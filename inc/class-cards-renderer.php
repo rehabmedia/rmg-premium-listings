@@ -333,8 +333,6 @@ class Cards_Renderer {
 	private function get_wrapper_attributes(): string {
 		// Build the wrapper classes.
 		$class_parts = array(
-			'wp-block-rmg-blocks-listing-cards-v2', // Legacy class support.
-			'listing-cards-v2', // Legacy class support.
 			'premium-listing-cards',
 			'layout-' . sanitize_html_class( $this->args['layout'] ),
 			'action-' . sanitize_html_class( $this->args['action_type'] ),
@@ -342,6 +340,18 @@ class Cards_Renderer {
 			$this->args['is_inline'] ? 'inline' : '',
 			...$this->args['wrapper_classes'],
 		);
+
+		/**
+		 * Filter the wrapper classes for the listing cards block.
+		 *
+		 * Allows modification of the CSS classes applied to the block wrapper.
+		 * Useful for backward compatibility or custom styling needs.
+		 *
+		 * @param array $class_parts Array of CSS class names.
+		 * @param array $args        The rendering arguments for this block instance.
+		 * @return array Modified array of CSS class names.
+		 */
+		$class_parts = apply_filters( 'rmg_premium_listings_wrapper_classes', $class_parts, $this->args );
 
 		$this->args['wrapper_attributes'] = array_merge(
 			$this->args['wrapper_attributes'],

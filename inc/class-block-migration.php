@@ -15,22 +15,27 @@ namespace RMG_Premium_Listings;
 class Block_Migration {
 	/**
 	 * Initialize the block migration.
+	 *
+	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		// Register class aliases for backward compatibility.
 		self::register_class_aliases();
 
 		add_filter( 'render_block', array( __CLASS__, 'migrate_legacy_block' ), 10, 2 );
 		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'enqueue_migration_script' ) );
 		add_action( 'rest_api_init', array( __CLASS__, 'register_legacy_rest_routes' ) );
+		add_filter( 'rmg_premium_listings_wrapper_classes', array( __CLASS__, 'add_legacy_wrapper_classes' ) );
 	}
 
 	/**
 	 * Register class aliases for backward compatibility.
 	 *
 	 * Creates aliases so old class names still work with new implementations.
+	 *
+	 * @return void
 	 */
-	public static function register_class_aliases() {
+	public static function register_class_aliases(): void {
 		// Create alias for the old Listing_Cards_V2 class to point to Cards_Renderer.
 		if ( ! class_exists( 'Listing_Cards_V2' ) && class_exists( 'RMG_Premium_Listings\Cards_Renderer' ) ) {
 			class_alias( 'RMG_Premium_Listings\Cards_Renderer', 'Listing_Cards_V2' );
@@ -49,7 +54,7 @@ class Block_Migration {
 	 * @param array  $block         The full block, including name and attributes.
 	 * @return string Modified block content.
 	 */
-	public static function migrate_legacy_block( $block_content, $block ) {
+	public static function migrate_legacy_block( string $block_content, array $block ): string {
 		// Check if this is the legacy block.
 		if ( 'rmg-blocks/listing-cards-v2' !== $block['blockName'] ) {
 			return $block_content;
@@ -64,11 +69,37 @@ class Block_Migration {
 	}
 
 	/**
+	 * Add legacy wrapper classes for backward compatibility.
+	 *
+	 * Adds old block class names to maintain CSS compatibility with existing styles.
+	 * This allows sites that have custom CSS targeting the old classes to continue working.
+	 *
+	 * @param array $class_parts Array of CSS class names.
+	 * @param array $args        The rendering arguments for this block instance.
+	 * @return array Modified array of CSS class names.
+	 *
+	 * @phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $args required by filter signature.
+	 */
+	public static function add_legacy_wrapper_classes( array $class_parts ): array {
+		// Prepend legacy classes to the array.
+		// These are added first so they appear before the new classes in the HTML.
+		array_unshift(
+			$class_parts,
+			'wp-block-rmg-blocks-listing-cards-v2', // Old block wrapper class.
+			'listing-cards-v2' // Old base class.
+		);
+
+		return $class_parts;
+	}
+
+	/**
 	 * Register legacy REST API routes.
 	 *
 	 * Creates alias routes for old endpoint names to redirect to new endpoints.
+	 *
+	 * @return void
 	 */
-	public static function register_legacy_rest_routes() {
+	public static function register_legacy_rest_routes(): void {
 		// Register the old endpoint as an alias to the new one.
 		register_rest_route(
 			'rmg/v1',
@@ -87,7 +118,7 @@ class Block_Migration {
 	 * @param \WP_REST_Request $request The REST request object.
 	 * @return \WP_REST_Response|\WP_Error The response from the new endpoint.
 	 */
-	public static function proxy_to_new_endpoint( $request ) {
+	public static function proxy_to_new_endpoint( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		// Log the proxying for debugging.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -136,8 +167,10 @@ class Block_Migration {
 
 	/**
 	 * Enqueue editor script to handle block transformation.
+	 *
+	 * @return void
 	 */
-	public static function enqueue_migration_script() {
+	public static function enqueue_migration_script(): void {
 		self::enqueue_asset(
 			'block-migration',
 			'js/block-migration.js'
