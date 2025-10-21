@@ -731,7 +731,7 @@ class ES_Query {
 			case self::PAGE_TYPE_REHAB_CENTER:
 			case self::PAGE_TYPE_DEFAULT:
 			default:
-				return '1000mi';
+				return '500mi';
 		}
 	}
 
