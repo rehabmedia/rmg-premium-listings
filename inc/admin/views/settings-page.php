@@ -142,7 +142,7 @@ $default_json = wp_json_encode(
 					<div class="rmg-form-row">
 						<textarea id="config-json"
 							name="config_json"
-							rows="39"
+							rows="40"
 							class="large-text code"
 							spellcheck="false"><?php echo esc_textarea( ! empty( $last_saved['json'] ) ? $last_saved['json'] : $default_json ); ?></textarea>
 						<p class="description">
@@ -228,84 +228,89 @@ $default_json = wp_json_encode(
 			<div class="rmg-card">
 				<h3><?php esc_html_e( 'Configuration Options', 'rmg-premium-listings' ); ?></h3>
 				<dl class="rmg-help-list">
+					<!-- Layout Options -->
 					<dt><code>layout</code></dt>
-					<dd><strong><?php esc_html_e( 'three-column', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Displays 3 listings in a horizontal layout. ', 'rmg-premium-listings' ); ?></dd>
-					<dd><strong><?php esc_html_e( 'slider', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Displays 8 listings in a slider-format. 3 visible on screen by default.', 'rmg-premium-listings' ); ?></dd>
-					<dd><strong><?php esc_html_e( 'vertical', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Displays 3 listings in a vertical layout.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>three-column</strong> - Displays 3 listings in a horizontal layout.</dd>
+					<dd><strong>slider</strong> - Displays 8 listings in a slider format (3 visible by default).</dd>
+					<dd><strong>vertical</strong> - Displays 3 listings in a vertical layout.</dd>
 
 					<dt><code>hasBackground</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Adds background color and padding to wrapper', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Adds background color and padding to the wrapper.</dd>
 
 					<dt><code>actionType</code></dt>
-					<dd><strong><?php esc_html_e( 'none:', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'defaults to displaying cards only.', 'rmg-premium-listings' ); ?></dd>
-					<dd><strong><?php esc_html_e( 'filter:', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'filter the returned results by a single taxonomy term. Add a single term to the selectedTerms array.', 'rmg-premium-listings' ); ?></dd>
-					<dd><strong><?php esc_html_e( 'tabs:', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'allow filtering by multiple taxonomy terms. Displays buttons for toggling between results. Add a comma-separated list of terms to the selectedTerms arrays.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>none</strong> - Displays cards only (no filtering).</dd>
+					<dd><strong>filter</strong> - Filters results by a single taxonomy term. Add one term to selectedTerms.</dd>
+					<dd><strong>tabs</strong> - Shows tabs for filtering by multiple terms. Add multiple terms to selectedTerms.</dd>
 
 					<dt><code>isInline</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Inline display mode, for use in confined spaces (eg. narrow content container).', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Inline display mode for confined spaces (e.g., narrow containers).</dd>
 
 					<dt><code>slidesToShow</code></dt>
-					<dd><?php esc_html_e( 'Number of cards to show without scroll or slider wrap.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'eg. 3 or 1.6, etc.', 'rmg-premium-listings' ); ?></strong> </dd>
+					<dd><strong>Number</strong> - Cards visible without scrolling. Examples: 3, 1.6, 2.5</dd>
 
+					<!-- Headline Options -->
 					<dt><code>headline.show</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Show/hide headline. Default true.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Show or hide the headline. Default: true</dd>
 
 					<dt><code>headline.text</code></dt>
-					<dd><?php esc_html_e( 'Headline text above cards.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>String</strong> - Headline text displayed above cards.</dd>
 
 					<dt><code>headline.alignment</code></dt>
-					<dd><?php esc_html_e( 'left, center, or right.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>String</strong> - Text alignment: left, center, or right.</dd>
 
 					<dt><code>headline.tag</code></dt>
-					<dd><?php esc_html_e( '1-6 (h1 through h6).', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Number</strong> - Heading level: 1-6 (h1 through h6).</dd>
 
+					<!-- Filter Options -->
 					<dt><code>selectedTerms</code></dt>
-					<dd><?php esc_html_e( 'Filter cards by taxonomy terms (amenities, clinicalServices, levelsOfCare, paymentOptions, programs, treatmentOptions). Supports comma-separated strings. Required for filter (single term) or tabs (multiple terms).', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Object</strong> - Filter by taxonomy terms: amenities, clinicalServices, levelsOfCare, paymentOptions, programs, treatmentOptions. Use arrays for each taxonomy. Required for filter (single term) or tabs (multiple terms).</dd>
 
+					<!-- Card Display Options -->
 					<dt><code>cardOptions.hasBackground</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Add background to individual cards. Also changes border color from dark to light, if active.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Adds background to individual cards. Changes border from dark to light.</dd>
 
 					<dt><code>cardOptions.showRank</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Display rating/ranking.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Display rating and ranking information.</dd>
 
 					<dt><code>cardOptions.showAddress</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Display facility address.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Display facility address.</dd>
 
 					<dt><code>cardOptions.showInsurance</code></dt>
-					<dd><strong><?php esc_html_e( 'true/false', 'rmg-premium-listings' ); ?></strong> <?php esc_html_e( 'Display insurance badge.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>Boolean</strong> - Display insurance acceptance badge.</dd>
 
+					<!-- Style Options -->
 					<dt><code>displayOptions.bgColor</code></dt>
-					<dd><?php esc_html_e( 'Background color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-bg-color</code></dd>
+					<dd><strong>String</strong> - Background color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-bg-color</code></em></dd>
 
 					<dt><code>displayOptions.borderColor</code></dt>
-					<dd><?php esc_html_e( 'Card border color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-color</code></dd>
+					<dd><strong>String</strong> - Card border color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-border-color</code></em></dd>
 
 					<dt><code>displayOptions.textColor</code></dt>
-					<dd><?php esc_html_e( 'Primary text color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-text-color</code></dd>
+					<dd><strong>String</strong> - Primary text color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-text-color</code></em></dd>
 
 					<dt><code>displayOptions.headingColor</code></dt>
-					<dd><?php esc_html_e( 'Headline color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-heading-color</code></dd>
+					<dd><strong>String</strong> - Headline color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-heading-color</code></em></dd>
 
 					<dt><code>displayOptions.textHoverColor</code></dt>
-					<dd><?php esc_html_e( 'Link hover color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-text-hover-color</code></dd>
+					<dd><strong>String</strong> - Link hover color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-text-hover-color</code></em></dd>
 
 					<dt><code>displayOptions.borderHoverColor</code></dt>
-					<dd><?php esc_html_e( 'Card border hover color. Supports hex colors (#fff) or linear gradients.', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-hover-color</code></dd>
+					<dd><strong>String</strong> - Card border hover color. Supports hex (#fff) or gradients. <em>CSS var: <code>--rmg-border-hover-color</code></em></dd>
 
 					<dt><code>displayOptions.fontFamily</code></dt>
-					<dd><?php esc_html_e( 'Font family. e.g., "Arial, sans-serif" or "Poppins, sans-serif"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-font-family</code></dd>
+					<dd><strong>String</strong> - Font family. Example: "Arial, sans-serif" or "Poppins, sans-serif". <em>CSS var: <code>--rmg-font-family</code></em></dd>
 
 					<dt><code>displayOptions.padding</code></dt>
-					<dd><?php esc_html_e( 'Block padding. e.g., "1.5rem" or "24px"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-padding</code></dd>
+					<dd><strong>String</strong> - Block padding. Example: "1.5rem" or "24px". <em>CSS var: <code>--rmg-padding</code></em></dd>
 
 					<dt><code>displayOptions.margin</code></dt>
-					<dd><?php esc_html_e( 'Block margin. e.g., "0 auto" or "20px 0"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-margin</code></dd>
+					<dd><strong>String</strong> - Block margin. Example: "0 auto" or "20px 0". <em>CSS var: <code>--rmg-margin</code></em></dd>
 
 					<dt><code>displayOptions.borderRadius</code></dt>
-					<dd><?php esc_html_e( 'Border radius for cards and container. e.g., "16px" or "8px". Default: "16px"', 'rmg-premium-listings' ); ?> <strong><?php esc_html_e( 'CSS var:', 'rmg-premium-listings' ); ?></strong> <code>--rmg-border-radius</code></dd>
+					<dd><strong>String</strong> - Border radius for cards and container. Example: "16px" or "8px". Default: "16px". <em>CSS var: <code>--rmg-border-radius</code></em></dd>
 
 					<dt><code>displayOptions.classname</code></dt>
-					<dd><?php esc_html_e( 'Custom CSS class(es) added to embed container. Supports space-separated values.', 'rmg-premium-listings' ); ?></dd>
+					<dd><strong>String</strong> - Custom CSS class(es) added to embed container. Supports space-separated values.</dd>
 				</dl>
 			</div>
 		</div>
