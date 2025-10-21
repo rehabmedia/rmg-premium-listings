@@ -492,7 +492,9 @@
 					scroll-snap-stop: always;
 
 					@media (max-width: 1199px) {
-						flex: 0 0 25rem;
+						$calc-space: calc((.92 + (var(--slides-to-show) - 2) * 0.1) * 1rem);
+
+						flex: 0 0 calc((100% / var(--slides-to-show)) - #{$calc-space});
 						max-width: 75vw;
 					}
 
