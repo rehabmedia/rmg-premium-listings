@@ -25,7 +25,6 @@ class Embed {
 		add_action( 'init', array( __CLASS__, 'add_rewrite_rules' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'handle_embed_template' ) );
 		add_filter( 'query_vars', array( __CLASS__, 'add_query_vars' ) );
-		add_filter( 'wp_headers', array( __CLASS__, 'modify_embed_headers' ), 999 );
 		add_filter( 'redirect_canonical', array( __CLASS__, 'prevent_embed_redirect' ), 10, 2 );
 	}
 
@@ -41,28 +40,6 @@ class Embed {
 			return false; // Don't redirect.
 		}
 		return $redirect_url;
-	}
-
-	/**
-	 * Modify headers for embed requests to allow cross-origin embedding.
-	 *
-	 * @param array $headers Headers to be sent.
-	 * @return array Modified headers.
-	 */
-	public static function modify_embed_headers( array $headers ): array {
-		$embed_type = get_query_var( 'rmg_embed' );
-
-		if ( 'listing-cards' === $embed_type ) {
-			// Remove restrictive headers.
-			unset( $headers['Content-Security-Policy'] );
-			unset( $headers['X-Frame-Options'] );
-
-			// Add permissive headers.
-			$headers['Content-Security-Policy'] = 'frame-ancestors *;';
-			$headers['X-Frame-Options']         = 'ALLOWALL';
-		}
-
-		return $headers;
 	}
 
 	/**
@@ -97,12 +74,6 @@ class Embed {
 		if ( 'listing-cards' !== $embed_type ) {
 			return;
 		}
-
-		// Remove restrictive headers and allow embedding on any domain.
-		header_remove( 'Content-Security-Policy' );
-		header_remove( 'X-Frame-Options' );
-		header( 'Content-Security-Policy: frame-ancestors *;' );
-		header( 'X-Frame-Options: ALLOWALL' );
 
 		// Get configuration (supports ref, config, or defaults).
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public embed endpoint.
