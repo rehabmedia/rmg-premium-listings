@@ -394,7 +394,7 @@ import '../scss/admin.scss';
 
 			const embedUrl = `${
 				window.location.origin
-			}/embed/listing-cards/?${ params.toString() }`;
+			}/embed/listing-cards?${ params.toString() }`;
 
 			// Store the URL and custom classname for later use.
 			this.currentEmbedUrl = embedUrl;
