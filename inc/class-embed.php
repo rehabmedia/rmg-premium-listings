@@ -26,6 +26,21 @@ class Embed {
 		add_action( 'template_redirect', array( __CLASS__, 'handle_embed_template' ) );
 		add_filter( 'query_vars', array( __CLASS__, 'add_query_vars' ) );
 		add_filter( 'wp_headers', array( __CLASS__, 'modify_embed_headers' ), 999 );
+		add_filter( 'redirect_canonical', array( __CLASS__, 'prevent_embed_redirect' ), 10, 2 );
+	}
+
+	/**
+	 * Prevent WordPress from doing canonical redirects on embed endpoints.
+	 *
+	 * @param string|false $redirect_url  The redirect URL.
+	 * @param string       $requested_url The requested URL.
+	 * @return string|false The redirect URL or false to prevent redirect.
+	 */
+	public static function prevent_embed_redirect( $redirect_url, string $requested_url ) {
+		if ( strpos( $requested_url, '/embed/listing-cards' ) !== false ) {
+			return false; // Don't redirect.
+		}
+		return $redirect_url;
 	}
 
 	/**
@@ -54,6 +69,7 @@ class Embed {
 	 * Add custom rewrite rules for embed endpoint.
 	 */
 	public static function add_rewrite_rules(): void {
+		// Match both with and without trailing slash.
 		add_rewrite_rule(
 			'^embed/listing-cards/?$',
 			'index.php?rmg_embed=listing-cards',
