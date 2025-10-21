@@ -24,6 +24,15 @@ add_filter( 'show_admin_bar', '__return_false' );
 // Disable Query Monitor for embeds.
 add_filter( 'qm/dispatch/html', '__return_false' );
 
+// Allow embedding on any domain by setting permissive CSP header.
+add_action(
+	'send_headers',
+	function () {
+		header( 'Content-Security-Policy: frame-ancestors *;' );
+		header( 'X-Frame-Options: ALLOWALL' );
+	}
+);
+
 /**
  * Enqueue embed-specific assets.
  */
