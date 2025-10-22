@@ -27,6 +27,10 @@ $longitude       = get_field( '_pronamic_google_maps_longitude', $card['id'] );
 $is_premium      = $card['premium'];
 $is_premium_plus = 'premium+' === strtolower( $card['premium_level'] );
 
+// Get phone number (tracking_number first, then phone as fallback).
+$phone_raw       = $card['tracking_number'] ?: $card['phone'] ?: '';
+$phone_formatted = ! empty( $phone_raw ) ? \RMG_Premium_Listings\Helpers::phone_number_format( $phone_raw ) : '';
+
 if ( isset( $card['term_label'] ) ) {
 	$classes[] = sanitize_title( $card['term_label'] );
 }
@@ -133,7 +137,14 @@ $card_wrapper_tag = $is_premium ? 'aside' : 'article';
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $card['accepts_insurance'] && $show_insurance ) : ?>
+				<?php if ( $is_premium_plus && ! empty( $phone_raw ) ) : ?>
+					<div class="card-phone">
+						<a href="tel:+1<?php echo esc_attr( preg_replace( '/[^0-9]/', '', $phone_raw ) ); ?>" class="phone-badge" aria-label="<?php esc_attr_e( 'Call', 'rmg-premium-listings' ); ?> <?php echo esc_attr( $phone_formatted ); ?>">
+							<?php require RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/svg/phone.php'; ?>
+							<span><?php echo esc_html( $phone_formatted ); ?></span>
+						</a>
+					</div>
+				<?php elseif ( $card['accepts_insurance'] && $show_insurance ) : ?>
 					<div class="insurance-badge">
 						<?php require RMG_PREMIUM_LISTINGS_PLUGIN_DIR . 'inc/svg/insurance.php'; ?>
 						<?php esc_html_e( 'Accepts Insurance', 'rmg-premium-listings' ); ?>

@@ -113,4 +113,43 @@ class Helpers {
 			esc_url( $src_url )
 		);
 	}
+
+	/**
+	 * Format a phone number to (xxx) xxx-xxxx format.
+	 *
+	 * Takes a phone number string and formats it into a standard US format.
+	 * Strips all non-numeric characters first, then formats.
+	 *
+	 * @param string $phone_number The phone number to format.
+	 * @return string The formatted phone number, or original if invalid.
+	 */
+	public static function phone_number_format( string $phone_number ): string {
+		// Strip all non-numeric characters.
+		$cleaned = preg_replace( '/[^0-9]/', '', $phone_number );
+
+		// Check if we have a valid length (10 or 11 digits).
+		$length = strlen( $cleaned );
+
+		if ( 10 === $length ) {
+			// Format: (xxx) xxx-xxxx.
+			return sprintf(
+				'(%s) %s-%s',
+				substr( $cleaned, 0, 3 ),
+				substr( $cleaned, 3, 3 ),
+				substr( $cleaned, 6, 4 )
+			);
+		} elseif ( 11 === $length ) {
+			// Format: x (xxx) xxx-xxxx (with country code).
+			return sprintf(
+				'%s (%s) %s-%s',
+				substr( $cleaned, 0, 1 ),
+				substr( $cleaned, 1, 3 ),
+				substr( $cleaned, 4, 3 ),
+				substr( $cleaned, 7, 4 )
+			);
+		}
+
+		// Return original if we can't format it.
+		return $phone_number;
+	}
 }
