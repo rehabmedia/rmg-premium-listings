@@ -370,6 +370,41 @@
 			}
 		}
 
+		.card-phone {
+			flex: 1 1 auto;
+			justify-items: flex-end;
+
+			.phone-badge {
+				@include flex-center;
+
+				background: var(--rmg-color-core-primary);
+				border-radius: 8px;
+				color: var(--rmg-white);
+				font-size: 0.875rem;
+				font-weight: 900;
+				gap: 0.375rem;
+				line-height: 1.2;
+				max-width: 180px;
+				padding: 6px;
+				text-decoration: none;
+				transition: background-color 0.2s ease;
+				width: 100%;
+
+				&:hover,
+				&:focus-visible {
+					background: var(--rmg-bright-blue);
+				}
+
+				svg {
+					fill: currentColor;
+					margin-right: 4px;
+					height: 14px;
+					width: 14px;
+
+				}
+			}
+		}
+
 		.insurance-badge {
 			@include flex-center;
 
@@ -492,9 +527,7 @@
 					scroll-snap-stop: always;
 
 					@media (max-width: 1199px) {
-						$calc-space: calc((.92 + (var(--slides-to-show) - 2) * 0.1) * 1rem);
-
-						flex: 0 0 calc((100% / var(--slides-to-show)) - #{$calc-space});
+						flex: 0 0 25rem;
 						max-width: 75vw;
 					}
 
@@ -504,6 +537,7 @@
 						min-width: calc((100% / var(--slides-to-show)) - #{$calc-space});
 					}
 
+					.rmg-embed-body &,
 					.editor-styles-wrapper & {
 						$calc-space: calc((3 + (var(--slides-to-show) - 2) * 0.25) * 1rem);
 
