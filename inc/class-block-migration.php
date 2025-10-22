@@ -20,6 +20,7 @@ class Block_Migration {
 	 */
 	public static function init(): void {
 		// Register class aliases for backward compatibility.
+		// This MUST happen before rmg-blocks loads its Listing_Cards_V2 class.
 		self::register_class_aliases();
 
 		add_filter( 'render_block', array( __CLASS__, 'migrate_legacy_block' ), 10, 2 );
