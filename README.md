@@ -286,6 +286,78 @@ $cards->render( array(
 ) );
 ```
 
+## Block Migration Class
+
+The `Block_Migration` class handles backward compatibility for sites migrating from the legacy `rmg-blocks/listing-cards-v2` block to the new `rmg-premium-listings/cards` block.
+
+### What It Does
+
+The migration class provides seamless backward compatibility by:
+
+1. **Class Aliasing** - Creates aliases so old class references continue to work
+2. **Block Name Migration** - Automatically converts legacy blocks during render
+3. **CSS Class Preservation** - Maintains old CSS classes for style compatibility
+4. **REST API Proxying** - Redirects legacy endpoint requests to the new endpoint
+5. **Editor Transformation** - Provides block transformation in the editor
+
+### Class Aliases
+
+The following class aliases are automatically registered:
+
+| Legacy Class | New Class | Purpose |
+|--------------|-----------|---------|
+| `Listing_Cards_V2` | `RMG_Premium_Listings\Cards_Renderer` | Global namespace alias |
+| `RMG_Blocks\Listing_Cards_V2` | `RMG_Premium_Listings\Cards_Renderer` | Namespaced alias |
+
+This means existing code using the old class names will continue to work:
+
+```php
+// These all work and use the same class.
+$cards = new Listing_Cards_V2();
+$cards = new RMG_Blocks\Listing_Cards_V2();
+$cards = new RMG_Premium_Listings\Cards_Renderer();
+```
+
+### Block Migration
+
+**Automatic Runtime Conversion:**
+- Legacy block name: `rmg-blocks/listing-cards-v2`
+- New block name: `rmg-premium-listings/cards`
+- All legacy blocks automatically render using the new implementation
+- No manual migration required for existing content
+
+**CSS Class Compatibility:**
+
+Legacy CSS classes are automatically added to maintain styling:
+- `wp-block-rmg-blocks-listing-cards-v2`
+- `listing-cards-v2`
+
+These classes are prepended to the wrapper, so existing custom CSS continues to work.
+
+### REST API Proxying
+
+**Legacy Endpoint:**
+```
+POST /wp-json/rmg/v1/listing-cards-v2
+```
+
+**New Endpoint:**
+```
+POST /wp-json/rmg/v1/premium-listing-cards
+```
+
+All requests to the legacy endpoint are automatically proxied to the new endpoint with all parameters and headers preserved. Debug logging is enabled when `WP_DEBUG` is true.
+
+### Removing Migration Support
+
+When all sites have migrated, you can safely remove backward compatibility:
+
+1. Delete `inc/class-block-migration.php`
+2. Delete `build/js/block-migration.js` (and source file)
+3. Remove `Block_Migration::init()` call from `inc/class-rmg-premium-listings.php`
+
+All migration code is isolated in the `Block_Migration` class for easy removal.
+
 ## Available Filters
 
 See [inc/es/README.md](inc/es/README.md) for complete filter documentation.
