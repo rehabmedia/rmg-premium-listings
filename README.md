@@ -455,25 +455,252 @@ All migration code is isolated for easy removal.
 
 Retrieves filtered listing cards with Premium+ prioritization.
 
-**Query Parameters**:
-- `action_type` - Filter mode: 'all', 'filtered', 'tabs', 'none'
-- `card_count` - Number of cards to return (default: 3)
-- `exclude_displayed` - Boolean to exclude already displayed IDs
-- `selected_terms[taxonomy]` - Array of term slugs to filter by
-- `fetch_location` - Boolean to fetch user location from headers
+### Request Parameters
 
-**Example**:
+All parameters are optional and will fall back to defaults if not provided.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `action_type` | string | `'none'` | Filter mode: `'none'`, `'tabs'`, or `'filter'` |
+| `card_count` | int | `3` (or `8` for slider) | Number of cards to return (min: 1, max: 60) |
+| `layout` | string | `'three-column'` | Layout type: `'three-column'`, `'slider'`, or `'vertical'` |
+| `exclude_displayed` | bool | `false` | Exclude already displayed post IDs from results |
+| `has_background` | bool | `false` | Add background styling to cards container |
+| `is_inline` | bool | `false` | Apply inline styling |
+| `slides_to_show` | float | `3` | Number of slides visible in slider layout |
+| `fetch_location` | bool | `false` | Fetch user location from CloudFlare headers for geo-sorting |
+| `user_location` | object | `{}` | User location data (see below) |
+| `card_options` | object | See below | Display options for individual cards |
+| `headline` | object | See below | Headline configuration |
+| `selected_terms` | object | `{}` | Filter by taxonomy terms (see below) |
+| `context` | object | `{}` | Contextual information (post ID, type, etc.) |
+| `display_context` | string | `''` | Display context identifier |
+| `already_displayed` | array | `[]` | Array of post IDs already displayed |
+| `excluded_post_ids` | array | `[]` | Array of post IDs to exclude from results |
+| `wrapper_classes` | array | `[]` | Additional CSS classes for wrapper |
+| `wrapper_attributes` | object | `{}` | Additional HTML attributes for wrapper |
+
+### Card Options Object
+
+```json
+{
+  "hasBackground": false,
+  "showRank": true,
+  "showAddress": true,
+  "showInsurance": true
+}
+```
+
+### Headline Object
+
+```json
+{
+  "show": false,
+  "text": "Featured Facilities Near You",
+  "alignment": "left",
+  "tag": 2
+}
+```
+
+- `alignment` accepts: `'left'`, `'center'`, `'right'`
+- `tag` accepts: `1-6` (generates h1-h6 elements)
+
+### Selected Terms Object
+
+Filter results by taxonomy terms. Use term slugs:
+
+```json
+{
+  "amenities": ["pet-friendly", "yoga"],
+  "clinicalServices": [],
+  "levelsOfCare": ["inpatient", "outpatient"],
+  "paymentOptions": [],
+  "programs": ["mens-program"],
+  "treatmentOptions": ["detox", "dual-diagnosis"]
+}
+```
+
+### User Location Object
+
+```json
+{
+  "lat": 34.0522,
+  "lon": -118.2437,
+  "city": "Los Angeles",
+  "region": "CA",
+  "country": "US",
+  "type": "user"
+}
+```
+
+### Context Object
+
+```json
+{
+  "post_id": 123,
+  "post_type": "page",
+  "requires_location_data": false
+}
+```
+
+### Response Format
+
+**Success Response (200)**:
+
+```json
+{
+  "success": true,
+  "html": "<ul class=\"listing-cards\">...</ul>",
+  "displayed_ids": [123, 456, 789],
+  "location": {
+    "lat": 34.0522,
+    "lon": -118.2437,
+    "city": "Los Angeles",
+    "region": "CA",
+    "country": "US",
+    "type": "user"
+  },
+  "meta": {
+    "card_count": 6,
+    "cards_from_query": 6,
+    "cards_rendered": 6,
+    "layout": "three-column",
+    "action_type": "filtered"
+  },
+  "debug": {
+    "notes": [
+      "Location fetched from headers",
+      "Cards returned from ES query: 6"
+    ],
+    "warnings": []
+  }
+}
+```
+
+**Error Response (500)**:
+
+```json
+{
+  "code": "render_error",
+  "message": "Error message here",
+  "data": {
+    "status": 500,
+    "debug": {
+      "notes": [],
+      "warnings": [],
+      "trace": "Stack trace..."
+    }
+  }
+}
+```
+
+### Request Examples
+
+**Basic Request:**
+
 ```bash
 curl -X POST https://example.com/wp-json/rmg/v1/premium-listing-cards \
   -H "Content-Type: application/json" \
-  -d '{"action_type":"filtered","card_count":6,"selected_terms":{"treatmentOptions":["detox"],"levelsOfCare":["inpatient"]}}'
+  -d '{}'
 ```
 
-**Legacy Endpoint** (backward compatibility):
+**Filtered Request with Location:**
+
+```bash
+curl -X POST https://example.com/wp-json/rmg/v1/premium-listing-cards \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action_type": "filtered",
+    "card_count": 6,
+    "layout": "three-column",
+    "fetch_location": true,
+    "selected_terms": {
+      "treatmentOptions": ["detox"],
+      "levelsOfCare": ["inpatient"]
+    },
+    "card_options": {
+      "hasBackground": true,
+      "showRank": true,
+      "showAddress": true,
+      "showInsurance": true
+    },
+    "headline": {
+      "show": true,
+      "text": "Top Treatment Centers Near You",
+      "alignment": "center",
+      "tag": 2
+    }
+  }'
 ```
-POST /wp-json/rmg/v1/listing-cards-v2
+
+**Slider Layout with Custom Location:**
+
+```bash
+curl -X POST https://example.com/wp-json/rmg/v1/premium-listing-cards \
+  -H "Content-Type: application/json" \
+  -d '{
+    "layout": "slider",
+    "card_count": 8,
+    "slides_to_show": 3,
+    "user_location": {
+      "lat": 34.0522,
+      "lon": -118.2437,
+      "city": "Los Angeles",
+      "region": "CA",
+      "country": "US",
+      "type": "user"
+    },
+    "selected_terms": {
+      "programs": ["mens-program"]
+    }
+  }'
 ```
-Automatically proxied to the new endpoint with all parameters preserved.
+
+**Exclude Already Displayed:**
+
+```bash
+curl -X POST https://example.com/wp-json/rmg/v1/premium-listing-cards \
+  -H "Content-Type: application/json" \
+  -d '{
+    "card_count": 3,
+    "exclude_displayed": true,
+    "already_displayed": [123, 456, 789]
+  }'
+```
+
+### Location Data
+
+The endpoint can fetch user location from CloudFlare headers when `fetch_location` is `true`. The following headers are used:
+
+- `HTTP_CF_IPLATITUDE` - User latitude
+- `HTTP_CF_IPLONGITUDE` - User longitude
+- `HTTP_CF_IPCITY` - User city
+- `HTTP_CF_IPREGION` - User region/state
+- `HTTP_CF_IPCOUNTRY` - User country code
+
+Location data is used for geo-distance sorting to show nearest facilities first.
+
+**Debug Location:**
+
+Add `?debug-location` query parameter to prevent location fetching during testing.
+
+### Debug Mode
+
+When `WP_DEBUG` is enabled, the response includes additional debugging information:
+
+- `debug.notes` - Array of debugging messages
+- `debug.warnings` - Array of warnings about unfulfilled requests
+- Query vs rendered card counts
+- ID mismatches between query and HTML
+- Active filter information
+
+### Legacy Endpoint
+
+**`POST /wp-json/rmg/v1/listing-cards-v2`**
+
+The legacy endpoint is automatically proxied to the new endpoint with all parameters preserved. This maintains backward compatibility for sites migrating from `rmg-blocks/listing-cards-v2`.
+
+See [Block Migration](#block-migration--backward-compatibility) for more details on backward compatibility features.
 
 ## Version
 
