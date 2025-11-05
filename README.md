@@ -162,6 +162,130 @@ See [templates/README.md](templates/README.md) for technical details on how ifra
 - **RMG Impression Tracking**: Tracks views/clicks on listing cards and manages Premium+ budgets
 - **ElasticPress**: Syncs WordPress posts to Elasticsearch
 
+## Using the Listing Cards Class
+
+The `Cards_Renderer` class can be used directly in PHP to render listing cards programmatically.
+
+### Basic Usage
+
+```php
+use RMG_Premium_Listings\Cards_Renderer;
+
+// Basic rendering.
+$cards = new Cards_Renderer();
+$cards->render();
+
+// Rendering with custom arguments.
+$cards = new Cards_Renderer();
+$cards->render( array(
+	'layout'     => 'slider',
+	'card_count' => 6,
+	'headline'   => array(
+		'show' => true,
+		'text' => 'Featured Treatment Centers',
+	),
+) );
+
+// Get rendered output as string.
+$html = $cards->get_render( $args );
+```
+
+### Available Arguments
+
+All arguments are optional and will fall back to defaults if not provided.
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `action_type` | string | `'none'` | Filter mode: `'all'`, `'filtered'`, `'tabs'`, or `'none'` |
+| `card_count` | int | `3` | Number of cards to display (auto-adjusts to `8` for slider layout) |
+| `card_options` | array | See below | Display options for individual cards |
+| `context` | array | Auto-generated | Contextual information (post ID, type, admin status, etc.) |
+| `exclude_displayed` | bool | `false` | Prevent duplicate listings on the same page |
+| `has_background` | bool | `false` | Add background styling to the cards container |
+| `headline` | array | See below | Headline configuration |
+| `is_inline` | bool | `false` | Apply inline styling |
+| `layout` | string | `'three-column'` | Layout type: `'three-column'`, `'slider'`, or `'vertical'` |
+| `render_id` | string | Auto-generated | Unique ID for this render instance |
+| `selected_terms` | array | Empty arrays | Filter by taxonomy terms (see below) |
+| `slides_to_show` | int | `3` | Number of slides visible in slider layout |
+| `user_location` | array | Empty | User location data for geo-sorting |
+| `wrapper_classes` | array | Empty | Additional CSS classes for wrapper |
+| `wrapper_attributes` | array | Empty | Additional HTML attributes for wrapper |
+
+### Card Options
+
+The `card_options` array controls the display of individual card elements:
+
+```php
+'card_options' => array(
+	'hasBackground' => false,  // Show card background.
+	'showRank'      => true,   // Display ranking badge.
+	'showAddress'   => true,   // Show facility address.
+	'showInsurance' => true,   // Display insurance information.
+),
+```
+
+### Headline Configuration
+
+The `headline` array controls the section heading:
+
+```php
+'headline' => array(
+	'show'      => false,                                // Display headline.
+	'text'      => 'Featured Facilities Near You',      // Headline text.
+	'alignment' => 'left',                               // Text alignment: 'left', 'center', 'right'.
+	'tag'       => 2,                                    // Heading level (1-6, generates h1-h6).
+),
+```
+
+### Selected Terms (Filtering)
+
+The `selected_terms` array filters results by taxonomy terms. Use term slugs:
+
+```php
+'selected_terms' => array(
+	'amenities'        => array( 'pet-friendly', 'yoga' ),
+	'clinicalServices' => array(),
+	'levelsOfCare'     => array( 'inpatient', 'outpatient' ),
+	'paymentOptions'   => array(),
+	'programs'         => array( 'mens-program' ),
+	'treatmentOptions' => array( 'detox', 'dual-diagnosis' ),
+),
+```
+
+### Complete Example
+
+```php
+use RMG_Premium_Listings\Cards_Renderer;
+
+$cards = new Cards_Renderer();
+$cards->render( array(
+	'layout'            => 'slider',
+	'card_count'        => 8,
+	'action_type'       => 'filtered',
+	'exclude_displayed' => true,
+	'has_background'    => true,
+	'slides_to_show'    => 3,
+	'headline'          => array(
+		'show'      => true,
+		'text'      => 'Top-Rated Treatment Centers Near You',
+		'alignment' => 'center',
+		'tag'       => 2,
+	),
+	'card_options'      => array(
+		'hasBackground' => true,
+		'showRank'      => true,
+		'showAddress'   => true,
+		'showInsurance' => true,
+	),
+	'selected_terms'    => array(
+		'levelsOfCare'     => array( 'inpatient' ),
+		'treatmentOptions' => array( 'detox' ),
+	),
+	'wrapper_classes'   => array( 'custom-class' ),
+) );
+```
+
 ## Available Filters
 
 See [inc/es/README.md](inc/es/README.md) for complete filter documentation.
