@@ -2,6 +2,23 @@
 
 Premium facility listings plugin with ElasticSearch integration, advanced filtering, customizable card displays, and embeddable widgets.
 
+## Table of Contents
+
+- [Features](#features)
+- [Structure](#structure)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Development](#development)
+- [Embed Generator](#embed-generator)
+- [Dependencies](#dependencies)
+- [Using the Listing Cards Class](#using-the-listing-cards-class)
+- [Block Migration Class](#block-migration-class)
+- [Available Filters](#available-filters)
+- [Premium+ Pacing System](#premium-pacing-system)
+- [Block Migration & Backward Compatibility](#block-migration--backward-compatibility)
+- [REST API](#rest-api)
+- [Version](#version)
+
 ## Features
 
 - **Listing Cards Block**: Gutenberg block for displaying facility listings
